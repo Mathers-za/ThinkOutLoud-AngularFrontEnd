@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ILoginForm, iUser } from '../Interfaces/Users';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -7,5 +9,13 @@ import { Injectable } from '@angular/core';
 export class UsersService {
   constructor(private http: HttpClient) {}
 
-  registerUser() {}
+  registerUser(formData: ILoginForm) {
+    return this.http.post('/users/register', formData, {
+      withCredentials: true,
+    });
+  }
+
+  loginUser(formData: ILoginForm) {
+    return this.http.post('/user/login', formData, { withCredentials: true });
+  }
 }

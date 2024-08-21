@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "base/positioning";
+
+button:hover {
+  background-color: pink;
+}
+
+body,
+button {
+  font-size: larger;
+  box-sizing: border-box;
+}
