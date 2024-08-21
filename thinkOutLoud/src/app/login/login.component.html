@@ -5,31 +5,36 @@
     </section>
     <section class="body">
       <form class="content_pos" (ngSubmit)="onSubmit()">
-        <label *ngIf="!isRegistered"
-          >First name<input
-            [(ngModel)]="formData.firstName"
-            type="text"
-            name="firstName"
-        /></label>
-        <label *ngIf="!isRegistered"
-          >Last name
-          <input [(ngModel)]="formData.lastName" type="text" name="lastName"
-        /></label>
-        <label
-          >Email <input type="text" [(ngModel)]="formData.email" name="email"
-        /></label>
-        <label
-          >Password
-          <input type="text" [(ngModel)]="formData.password" name="password"
-        /></label>
-        <label *ngIf="!isRegistered"
-          >Confirm password
-          <input
-            type="text"
-            [(ngModel)]="formData.passwordConfirm"
-            name="passwordConfirm"
-          />
-        </label>
+        <app-input
+          [isVisible]="!isRegistered"
+          name="firstName"
+          label="First name"
+          [value]="formData.firstName"
+          type="text"
+        ></app-input>
+        <app-input
+          [isVisible]="!isRegistered"
+          name="lastName"
+          label="Last name"
+          [value]="formData.lastName"
+          type="text"
+        ></app-input>
+
+        <app-input
+          type="text"
+          name="password"
+          label="password"
+          [value]="formData.password"
+        ></app-input>
+        <app-input
+          [isVisible]="!isRegistered"
+          type="text"
+          name="passwordConfirm"
+          label="Confirm password"
+          [value]="formData.passwordConfirm"
+        ></app-input>
+
+        <input [(ngModel)]="formData.email" type="text" name="email" />
 
         <button
           (click)="isRegistered ? login() : register()"

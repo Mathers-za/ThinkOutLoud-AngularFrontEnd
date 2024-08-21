@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ILoginForm, iUser } from '../Interfaces/Users';
 import { UsersService } from '../services/users.service';
+import { InputComponent } from '../input/input.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgIf, FormsModule],
+  imports: [NgIf, FormsModule, InputComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -48,6 +49,7 @@ export class LoginComponent {
   }
 
   resetFormData() {
+    console.log('email is ' + this.formData.email);
     this.formData = {
       firstName: '',
       lastName: '',
@@ -55,6 +57,8 @@ export class LoginComponent {
       password: '',
       passwordConfirm: '',
     };
+
+    console.log('teh last name is ' + this.formData.lastName);
   }
 
   onSubmit() {}
