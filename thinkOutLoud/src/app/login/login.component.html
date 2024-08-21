@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="card">
+    <section class="heading">
+      <h1>{{ isRegistered ? "Login Page" : "Registration Page" }}</h1>
+      <img src="" alt="" />
+      <p></p>
+    </section>
+    <section class="body">
+      <form (ngSubmit)="onSubmit()">
+        <label
+          >First name<input
+            *ngIf="!isRegistered"
+            [(ngModel)]="registrationFormData.firstName"
+            type="text"
+            name="firstName"
+        /></label>
+        <label
+          >Last name
+          <input
+            *ngIf="!isRegistered"
+            [(ngModel)]="registrationFormData.lastName"
+            type="text"
+            name="lastName"
+        /></label>
+        <label
+          >Email
+          <input
+            type="text"
+            [(ngModel)]="registrationFormData.email"
+            name="email"
+        /></label>
+        <label
+          >Password
+          <input
+            type="text"
+            [(ngModel)]="registrationFormData.password"
+            name="password"
+        /></label>
+        <label
+          >Confirm password
+          <input
+            *ngIf="!isRegistered"
+            type="text"
+            [(ngModel)]="registrationFormData.passwordConfirm"
+            name="passwordConfirm"
+          />
+        </label>
+
+        <button type="submit">Sumbit</button>
+      </form>
+      <h2 (click)="toggleIsRegistered()">
+        {{
+          isRegistered
+            ? "Already Registered? Click here to login"
+            : "Not registered? Click here to create an account"
+        }}
+      </h2>
+    </section>
+  </div>
+</div>
