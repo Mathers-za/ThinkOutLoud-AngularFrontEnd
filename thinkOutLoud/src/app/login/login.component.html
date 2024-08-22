@@ -4,38 +4,77 @@
       <h1>{{ isRegistered ? "Login Page" : "Registration Page" }}</h1>
     </section>
     <section class="body">
-      <form class="content_pos" (ngSubmit)="onSubmit()">
-        <app-input
-          [isVisible]="!isRegistered"
-          name="firstName"
-          label="First name"
-          [value]="formData.firstName"
-          type="text"
-        ></app-input>
-        <app-input
-          [isVisible]="!isRegistered"
-          name="lastName"
-          label="Last name"
-          [value]="formData.lastName"
-          type="text"
-        ></app-input>
+      <form #loginForm="ngForm" class="content_pos" (ngSubmit)="onSubmit()">
+        <label *ngIf="!isRegistered">
+          First name<input
+            #firstName="ngModel"
+            required
+            [ngClass]="
+              firstName.invalid && firstName.touched ? 'inputError' : ''
+            "
+            name="firstName"
+            [(ngModel)]="formData.firstName"
+            type="text"
+            class="textInput"
+        /></label>
 
-        <app-input
-          type="text"
-          name="password"
-          label="password"
-          [value]="formData.password"
-        ></app-input>
-        <app-input
-          [isVisible]="!isRegistered"
-          type="text"
-          name="passwordConfirm"
-          label="Confirm password"
-          [value]="formData.passwordConfirm"
-        ></app-input>
-
-        <input [(ngModel)]="formData.email" type="text" name="email" />
-
+        <label *ngIf="!isRegistered"
+          >Last name
+          <input
+            #lastName="ngModel"
+            class="textInput"
+            required
+            [ngClass]="lastName.invalid && lastName.touched ? 'inputError' : ''"
+            name="lastName"
+            [(ngModel)]="formData.lastName"
+            type="text"
+          />
+          <p class="errorMessage" *ngIf="lastName.invalid && lastName.touched">
+            Last name is required
+          </p>
+        </label>
+        <label
+          >Email
+          <input
+            #email="ngModel"
+            [ngClass]="email.invalid && email.touched ? 'inputError' : ''"
+            class="textInput"
+            name="email"
+            [(ngModel)]="formData.email"
+            type="text"
+            required
+            email
+          />
+          <p class="errorMessage" *ngIf="email.invalid && email.touched">
+            {{ email.errors?.["email"] ? "Invalid email" : "Email required" }}
+          </p>
+        </label>
+        <label
+          >Password
+          <input
+            #password="ngModel"
+            [ngClass]="password.invalid && password.touched ? 'inputError' : ''"
+            required
+            name="password"
+            [(ngModel)]="formData.password"
+            type="text"
+          />
+        </label>
+        <label *ngIf="!isRegistered"
+          >Confirm password
+          <input
+            [ngClass]="
+              passwordConfirm.invalid && passwordConfirm.touched
+                ? 'inputError'
+                : ''
+            "
+            #passwordConfirm="ngModel"
+            required
+            name="passwordConfirm"
+            [(ngModel)]="formData.passwordConfirm"
+            type="text"
+          />
+        </label>
         <button
           (click)="isRegistered ? login() : register()"
           class="submitButton"
@@ -45,11 +84,11 @@
         </button>
       </form>
 
-      <p (click)="toggleIsRegistered()">
+      <p class="link" (click)="toggleIsRegistered()">
         {{
           isRegistered
-            ? "Already Registered? Click here to login"
-            : "Not registered? Click here to create an account"
+            ? "Not registered? Click here to create an account"
+            : "Already Registered? Click here to login"
         }}
       </p>
     </section>

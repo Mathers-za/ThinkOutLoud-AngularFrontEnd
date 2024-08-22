@@ -5,13 +5,18 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  background-image: url("/tower.jpg");
+  background-size: contain;
+  background-position: center;
 }
 
 .card {
   border: 1px solid black;
-
-  width: 40%;
-  padding: 18px;
+  background-image: url("/paint.jpg");
+  background-position: center;
+  background-color: rgb(235, 235, 222);
+  width: 20%;
+  padding: 20px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   min-height: 60%;
   max-height: 80%;
@@ -27,13 +32,10 @@
 
 .heading {
   text-align: center;
-  img {
-    width: 100px;
-    height: 100px;
-  }
+
   h1 {
-    color: blue;
-    margin: 0;
+    color: black;
+    margin-bottom: 1.2rem;
   }
 }
 label {
@@ -43,19 +45,40 @@ label {
   gap: 6px;
 
   input {
-    height: 1.5rem;
-    border-radius: 10px;
+    height: 1.8rem;
+    border-radius: 3px;
   }
 }
 
-p {
+.link {
   text-align: center;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: blue;
 }
 
 .submitButton {
   color: white;
   padding: 8px 10px;
-  background-color: cadetblue;
+  background-color: rgba($color: cadetblue, $alpha: 1);
   border: none;
   border-radius: 5px;
+  width: 100%;
+  margin-bottom: 8px;
+  font-size: medium;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  background-color: rgba($color: rgb(122, 195, 198), $alpha: 1);
+}
+
+.errorMessage {
+  font-size: small;
+  color: red;
+}
+.inputError {
+  border-color: red;
 }

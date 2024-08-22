@@ -6,8 +6,13 @@ button:hover {
   background-color: pink;
 }
 
-body,
-button {
-  font-size: larger;
+body {
+  font-size: 1rem;
+  font-family: sans-serif;
   box-sizing: border-box;
+  margin: 0;
+}
+
+* {
+  margin: 0;
 }

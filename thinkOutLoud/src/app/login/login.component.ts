@@ -1,19 +1,17 @@
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
 import { ILoginForm, iUser } from '../Interfaces/Users';
 import { UsersService } from '../services/users.service';
-import { InputComponent } from '../input/input.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgIf, FormsModule, InputComponent],
+  imports: [NgIf, FormsModule, NgClass],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  isRegistered = false;
   formData: ILoginForm = {
     firstName: '',
     lastName: '',
@@ -21,7 +19,8 @@ export class LoginComponent {
     password: '',
     passwordConfirm: '',
   };
-  apiRegisterResponse = {};
+
+  isRegistered = true;
 
   constructor(private usersService: UsersService) {}
 
@@ -31,11 +30,8 @@ export class LoginComponent {
   }
 
   login() {
-    console.log('logged fn ran');
     this.usersService.loginUser(this.formData).subscribe((value) => {
-      this.apiRegisterResponse = value;
-      console.log('the response from the register observable is ');
-      console.log(JSON.stringify(this.apiRegisterResponse));
+      console.log(value);
     });
   }
   register() {
@@ -57,8 +53,6 @@ export class LoginComponent {
       password: '',
       passwordConfirm: '',
     };
-
-    console.log('teh last name is ' + this.formData.lastName);
   }
 
   onSubmit() {}
