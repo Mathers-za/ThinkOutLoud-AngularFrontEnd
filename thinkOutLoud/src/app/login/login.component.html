@@ -4,7 +4,7 @@
       <h1>{{ isRegistered ? "Login Page" : "Registration Page" }}</h1>
     </section>
     <section class="body">
-      <form #loginForm="ngForm" class="content_pos" (ngSubmit)="onSubmit()">
+      <form #loginForm="ngForm" class="content_pos" (ngSubmit)="login()">
         <label *ngIf="!isRegistered">
           First name<input
             #firstName="ngModel"
@@ -97,7 +97,6 @@
           </p>
         </label>
         <button
-          (click)="isRegistered ? login() : register()"
           class="submitButton"
           type="submit"
           [disabled]="loginForm.form.invalid"

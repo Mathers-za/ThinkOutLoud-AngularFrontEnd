@@ -38,6 +38,7 @@ export class LoginComponent {
     this.usersService.loginUser(this.formData).subscribe((value) => {
       console.log(value);
     });
+    console.log('ran once');
   }
   register() {
     console.log('register fn ran ');
@@ -60,12 +61,5 @@ export class LoginComponent {
       password: '',
       passwordConfirm: '',
     };
-  }
-
-  onSubmit() {
-    this.usersService.loginUser(this.formData).subscribe({
-      next: (value) => console.log(value),
-      error: (error) => (this.serverErrorMessage = error.message),
-    });
   }
 }
