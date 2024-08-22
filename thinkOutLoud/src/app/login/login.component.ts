@@ -1,6 +1,6 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { ILoginForm, iUser } from '../Interfaces/Users';
 import { UsersService } from '../services/users.service';
 
@@ -20,13 +20,18 @@ export class LoginComponent {
     passwordConfirm: '',
   };
 
+  serverErrorMessage: string = '';
+
   isRegistered = true;
 
   constructor(private usersService: UsersService) {}
 
   toggleIsRegistered() {
     this.isRegistered = !this.isRegistered;
-    this.resetFormData();
+  }
+
+  resetLoginFormValidation(loginFormTemplateVariable: NgForm) {
+    loginFormTemplateVariable.resetForm();
   }
 
   login() {
@@ -40,7 +45,9 @@ export class LoginComponent {
       next: (value) => {
         console.log(value);
         this.isRegistered = true;
+        this.resetFormData();
       },
+      error: (error) => (this.serverErrorMessage = error.message),
     });
   }
 
@@ -55,5 +62,10 @@ export class LoginComponent {
     };
   }
 
-  onSubmit() {}
+  onSubmit() {
+    this.usersService.loginUser(this.formData).subscribe({
+      next: (value) => console.log(value),
+      error: (error) => (this.serverErrorMessage = error.message),
+    });
+  }
 }

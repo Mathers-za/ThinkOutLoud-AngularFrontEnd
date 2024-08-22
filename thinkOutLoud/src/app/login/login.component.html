@@ -16,7 +16,14 @@
             [(ngModel)]="formData.firstName"
             type="text"
             class="textInput"
-        /></label>
+          />
+          <p
+            class="errorMessage"
+            *ngIf="firstName.invalid && firstName.touched"
+          >
+            First name is required
+          </p>
+        </label>
 
         <label *ngIf="!isRegistered"
           >Last name
@@ -30,7 +37,7 @@
             type="text"
           />
           <p class="errorMessage" *ngIf="lastName.invalid && lastName.touched">
-            Last name is required
+            First name is required
           </p>
         </label>
         <label
@@ -52,6 +59,11 @@
         <label
           >Password
           <input
+            [attr.pattern]="
+              !isRegistered
+                ? '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$'
+                : null
+            "
             #password="ngModel"
             [ngClass]="password.invalid && password.touched ? 'inputError' : ''"
             required
@@ -59,6 +71,9 @@
             [(ngModel)]="formData.password"
             type="text"
           />
+          <p class="errorMessage" *ngIf="password.invalid && password.touched">
+            {{!isRegistered && password.invalid && password.errors?.["pattern"]?"Pssword too weak":"Password is required"}}
+          </p>
         </label>
         <label *ngIf="!isRegistered"
           >Confirm password
@@ -74,22 +89,36 @@
             [(ngModel)]="formData.passwordConfirm"
             type="text"
           />
+          <p
+            class="errorMessage"
+            *ngIf="passwordConfirm.invalid && passwordConfirm.touched"
+          >
+            Password confirm is required
+          </p>
         </label>
         <button
           (click)="isRegistered ? login() : register()"
           class="submitButton"
           type="submit"
+          [disabled]="loginForm.form.invalid"
         >
           Sumbit
         </button>
       </form>
 
-      <p class="link" (click)="toggleIsRegistered()">
+      <p
+        class="link"
+        (click)="resetLoginFormValidation(loginForm); toggleIsRegistered()"
+      >
         {{
           isRegistered
             ? "Not registered? Click here to create an account"
             : "Already Registered? Click here to login"
         }}
+      </p>
+
+      <p class="serverError" *ngIf="serverErrorMessage">
+        {{ serverErrorMessage }}
       </p>
     </section>
   </div>
