@@ -1,9 +1,10 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { AbstractControl, FormsModule, NgForm, NgModel } from '@angular/forms';
-import { ILoginForm, iUser } from '../Interfaces/Users';
+import { FormsModule, NgForm } from '@angular/forms';
+import { ILoginForm } from '../Interfaces/Users';
 import { UsersService } from '../services/users.service';
 import { ConfirmPasswordDirective } from '../shared/custom directives/confirm-password.directive';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,7 @@ export class LoginComponent {
 
   isRegistered = true;
 
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService, private router: Router) {}
 
   toggleIsRegistered() {
     this.isRegistered = !this.isRegistered;
@@ -36,10 +37,10 @@ export class LoginComponent {
   }
 
   login() {
+    this.router.navigate(['/dashboard']);
     this.usersService.loginUser(this.formData).subscribe((value) => {
       console.log(value);
     });
-    console.log('ran once');
   }
   register() {
     console.log('register fn ran ');

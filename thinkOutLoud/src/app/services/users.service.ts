@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ILoginForm, iUser } from '../Interfaces/Users';
 import { Observable } from 'rxjs';
@@ -17,5 +17,11 @@ export class UsersService {
 
   loginUser(formData: ILoginForm) {
     return this.http.post('/user/login', formData, { withCredentials: true });
+  }
+
+  getUserData() {
+    return this.http.get<iUser | null>('/users/getUserOnlogin', {
+      withCredentials: true,
+    });
   }
 }

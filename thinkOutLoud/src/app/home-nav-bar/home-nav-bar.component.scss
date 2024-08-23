@@ -1,0 +1,36 @@
+.container {
+  min-height: 10%;
+  background-color: #fabc3f;
+  color: black;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  font-size: larger;
+}
+
+a {
+  cursor: pointer;
+}
+
+.left,
+.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.right {
+  gap: 20px;
+}
+
+.iconName {
+  display: flex;
+  align-items: center;
+  background-color: #387f39;
+  color: white;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}

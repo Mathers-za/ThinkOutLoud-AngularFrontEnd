@@ -99,9 +99,9 @@
             *ngIf="passwordConfirm.invalid && passwordConfirm.touched"
           >
             {{
-              passwordConfirm.errors?.['passwordMismatch']
-                ? 'Passwords do not match'
-                : 'Password confirmation is required'
+              passwordConfirm.hasError("passwordMismatch")
+                ? "Passwords do not match"
+                : "Password confirmation is required"
             }}
           </p>
         </label>
