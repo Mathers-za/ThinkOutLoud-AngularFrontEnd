@@ -59,10 +59,10 @@
         <label
           >Password
           <input
-            [attr.pattern]="
+            [pattern]="
               !isRegistered
                 ? '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$'
-                : null
+                : ''
             "
             #password="ngModel"
             [ngClass]="password.invalid && password.touched ? 'inputError' : ''"
@@ -72,7 +72,11 @@
             type="text"
           />
           <p class="errorMessage" *ngIf="password.invalid && password.touched">
-            {{!isRegistered && password.invalid && password.errors?.["pattern"]?"Pssword too weak":"Password is required"}}
+            {{
+              !isRegistered && password.invalid && password.errors?.["pattern"]
+                ? "Password is too weak"
+                : "Password is required"
+            }}
           </p>
         </label>
         <label *ngIf="!isRegistered"
