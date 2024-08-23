@@ -61,7 +61,7 @@
           <input
             [pattern]="
               !isRegistered
-                ? '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$'
+                ? '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_])[A-Za-z\\d\\W_]{8,}$'
                 : ''
             "
             #password="ngModel"
@@ -69,7 +69,7 @@
             required
             name="password"
             [(ngModel)]="formData.password"
-            type="text"
+            type="password"
           />
           <p class="errorMessage" *ngIf="password.invalid && password.touched">
             {{
@@ -80,7 +80,7 @@
           </p>
         </label>
         <label *ngIf="!isRegistered"
-          >Confirm password
+          >Confirm Password
           <input
             [ngClass]="
               passwordConfirm.invalid && passwordConfirm.touched
@@ -91,13 +91,18 @@
             required
             name="passwordConfirm"
             [(ngModel)]="formData.passwordConfirm"
-            type="text"
+            type="password"
+            [appConfirmPassword]="password"
           />
           <p
             class="errorMessage"
             *ngIf="passwordConfirm.invalid && passwordConfirm.touched"
           >
-            Password confirm is required
+            {{
+              passwordConfirm.errors?.['passwordMismatch']
+                ? 'Passwords do not match'
+                : 'Password confirmation is required'
+            }}
           </p>
         </label>
         <button

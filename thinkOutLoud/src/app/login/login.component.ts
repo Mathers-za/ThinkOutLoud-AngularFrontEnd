@@ -1,13 +1,14 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule, NgForm, NgModel } from '@angular/forms';
+import { AbstractControl, FormsModule, NgForm, NgModel } from '@angular/forms';
 import { ILoginForm, iUser } from '../Interfaces/Users';
 import { UsersService } from '../services/users.service';
+import { ConfirmPasswordDirective } from '../shared/custom directives/confirm-password.directive';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgIf, FormsModule, NgClass],
+  imports: [NgIf, FormsModule, NgClass, ConfirmPasswordDirective],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
