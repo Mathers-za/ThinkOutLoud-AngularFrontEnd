@@ -15,10 +15,14 @@ import { Observable } from 'rxjs';
 })
 export class DashboardComponent implements OnInit {
   user: iUser | null = null;
-  constructor(private httpService: UsersService) {}
+  serverError: string | null = null;
+  constructor(private usersService: UsersService) {}
+
   ngOnInit(): void {
-    this.httpService
-      .getUserData()
-      .subscribe((userData) => (this.user = userData));
+    console.log('dashboard loaded');
+    this.usersService.userCache$?.subscribe((userData) => {
+      this.user = userData;
+      console.log(userData);
+    });
   }
 }

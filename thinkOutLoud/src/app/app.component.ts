@@ -10,4 +10,9 @@ import { Router } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  constructor(private router: Router) {}
+  ngOnInit(): void {
+    this.router.navigate(['login']);
+  }
+}

@@ -1,14 +1,29 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ILoginForm, iUser } from '../Interfaces/Users';
-import { Observable, of, shareReplay, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  Observable,
+  of,
+  shareReplay,
+  tap,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
-  userCache$?: Observable<iUser | null> | null | undefined;
-  constructor(private http: HttpClient) {}
+  private userSubject$ = new BehaviorSubject<{
+    data: iUser | null;
+    error: any;
+  } | null>(null);
+  userCache$? = this.userSubject$.asObservable();
+
+  constructor(private http: HttpClient) {
+    console.log('the Injection occured');
+    this.fetchUserData().subscribe();
+  }
 
   registerUser(formData: ILoginForm) {
     return this.http.post('/users/register', formData, {
@@ -20,26 +35,34 @@ export class UsersService {
     return this.http.post('/user/login', formData, { withCredentials: true });
   }
 
-  invalidateUserCache() {
-    this.userCache$ = null;
+  refetchUserData() {
+    this.fetchUserData();
   }
 
-  refreshUserCache() {
-    this.invalidateUserCache();
-    return this.getLoggedInUserData();
-  }
-
-  getLoggedInUserData() {
-    if (!this.userCache$) {
-      this.userCache$ = this.http
-        .get<iUser | null>('/users/getUserOnlogin', {
-          withCredentials: true,
+  private fetchUserData() {
+    return this.http
+      .get<iUser | null>('/users/getUserOnlogin', {
+        withCredentials: true,
+      })
+      .pipe(
+        tap((userData) =>
+          this.userSubject$.next({ data: userData, error: null })
+        ),
+        catchError((err) => {
+          this.userSubject$.next({ data: null, error: err.message });
+          return of(null);
         })
-        .pipe(
-          tap((userData) => console.log('UserData is ' + userData)),
-          shareReplay(1)
-        );
-    }
-    return this.userCache$;
+      );
+  }
+
+  filterAllUsersByName(searchString: string) {
+    return this.http.get<iUser[]>('/users/usersSearch', {
+      params: { searchString: searchString },
+      withCredentials: true,
+    });
+  }
+
+  addFriend(userId: string, body: any) {
+    this.http.patch(`users/update:${userId}`, body, { withCredentials: true });
   }
 }

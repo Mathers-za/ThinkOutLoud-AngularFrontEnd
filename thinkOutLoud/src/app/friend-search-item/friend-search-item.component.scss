@@ -1,0 +1,29 @@
+.banner {
+  padding: 4px 2px;
+  color: white;
+  cursor: pointer;
+  background-color: lightgray;
+  transition: 0.3s;
+}
+
+.following {
+  background-color: blue;
+}
+
+.banner:hover {
+  filter: brightness(120%);
+}
+
+.container {
+  width: 100%;
+  padding: 10px 5px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fullName {
+  color: darkblue;
+  font-size: large;
+}

@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="form_group">
+    <input
+      [(ngModel)]="searchBarInput"
+      name="searchBarInput"
+      placeholder="Search For Friends"
+      type="text"
+      (change)="onSearch()"
+    />
+    <p>Search by fist name or last name</p>
+  </div>
+
+  <div *ngIf="searchBarInput && searchResultData.length === 0">
+    No friend with this first name or last name found
+  </div>
+  <div *ngIf="!searchBarInput">Type in the serach bar to find friends</div>
+
+  <div *ngIf="searchResultData.length > 0">
+    <app-friend-search-item
+      *ngFor="let user of searchResultData"
+      [userData]="user"
+    ></app-friend-search-item>
+  </div>
+</div>

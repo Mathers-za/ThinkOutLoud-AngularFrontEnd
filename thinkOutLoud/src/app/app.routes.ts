@@ -7,7 +7,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login Page' },
 
   { path: 'dashboard', component: DashboardComponent, title: 'Dashboard' },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', component: NotFoundPageComponent, title: 'Page not Found' },
 ];
 

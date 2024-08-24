@@ -1,0 +1,16 @@
+<div>
+  <div class="container">
+    <p class="fullName">
+      fullName:
+      {{ (userData?.firstName || "") + " " + (userData?.lastName || "") }}
+    </p>
+
+    <div
+      class="banner"
+      [ngClass]="following ? 'following' : ''"
+      (click)="toggleFollowing()"
+    >
+      Follow
+    </div>
+  </div>
+</div>
