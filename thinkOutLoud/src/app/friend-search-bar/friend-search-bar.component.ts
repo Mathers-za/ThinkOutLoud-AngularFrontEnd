@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { iUser } from '../Interfaces/Users';
+import { IUser } from '../Interfaces/Users';
 
 import { UsersService } from '../services/users.service';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +15,7 @@ import { FriendSearchItemComponent } from '../friend-search-item/friend-search-i
 })
 export class FriendSearchBarComponent {
   searchBarInput: string = '';
-  searchResultData: iUser[] = [];
+  searchResultData: IUser[] = [];
   timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
   serverErrorMessage: string = '';
 

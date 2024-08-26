@@ -5,6 +5,8 @@ import { ILoginForm } from '../Interfaces/Users';
 import { UsersService } from '../services/users.service';
 import { ConfirmPasswordDirective } from '../shared/custom directives/confirm-password.directive';
 import { Router } from '@angular/router';
+import { catchError, EMPTY, EmptyError, tap, throwError } from 'rxjs';
+import { HttpEvent, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -23,35 +25,64 @@ export class LoginComponent {
   };
 
   serverErrorMessage: string = '';
-
+  successRegistrationMessage = '';
   isRegistered = true;
 
   constructor(private usersService: UsersService, private router: Router) {}
 
   toggleIsRegistered() {
     this.isRegistered = !this.isRegistered;
+    this.serverErrorMessage = '';
   }
 
   resetLoginFormValidation(loginFormTemplateVariable: NgForm) {
     loginFormTemplateVariable.resetForm();
+    this.resetFormData();
+
+    this.successRegistrationMessage = '';
+  }
+
+  handleSuccessfullRegistration() {
+    let timeoutId;
+    clearTimeout(timeoutId);
+
+    this.successRegistrationMessage =
+      'Successfully created your account. Go to login page';
+    this.toggleIsRegistered();
   }
 
   login() {
-    this.router.navigate(['/dashboard']);
-    this.usersService.loginUser(this.formData).subscribe((value) => {
-      console.log(value);
-    });
+    this.usersService
+      .loginUser(this.formData)
+      .pipe(
+        tap((response) => {
+          console.log(response.status);
+          if (response.status === 200) {
+            this.router.navigate(['dashboard']);
+          }
+        }),
+        catchError((err) => {
+          this.serverErrorMessage = err.message;
+          return EMPTY;
+        })
+      )
+      .subscribe();
   }
   register() {
-    console.log('register fn ran ');
-    this.usersService.registerUser(this.formData).subscribe({
-      next: (value) => {
-        console.log(value);
-        this.isRegistered = true;
-        this.resetFormData();
-      },
-      error: (error) => (this.serverErrorMessage = error.message),
-    });
+    this.usersService
+      .registerUser(this.formData)
+      .pipe(
+        tap((httpResponse) =>
+          httpResponse.status === 201
+            ? this.handleSuccessfullRegistration()
+            : null
+        ),
+        catchError((err) => {
+          this.serverErrorMessage = err;
+          return EMPTY;
+        })
+      )
+      .subscribe();
   }
 
   resetFormData() {

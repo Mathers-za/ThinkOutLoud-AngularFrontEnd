@@ -6,7 +6,7 @@ export interface ILoginForm {
   passwordConfirm: string;
 }
 
-export interface iUser {
+export interface IUser {
   _id: string;
 
   firstName: string;

@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HomeNavBarComponent } from '../home-nav-bar/home-nav-bar.component';
-import { iUser } from '../Interfaces/Users';
+import { IUser } from '../Interfaces/Users';
 import { HttpClient } from '@angular/common/http';
 import { UsersService } from '../services/users.service';
-import { Observable } from 'rxjs';
+import { catchError, Observable, Subscription, tap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,16 +13,19 @@ import { Observable } from 'rxjs';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent implements OnInit {
-  user: iUser | null = null;
+export class DashboardComponent implements OnInit, OnDestroy {
+  user: IUser | null = null;
   serverError: string | null = null;
+  subScriber$!: Subscription;
   constructor(private usersService: UsersService) {}
 
   ngOnInit(): void {
-    console.log('dashboard loaded');
-    this.usersService.userCache$?.subscribe((userData) => {
-      this.user = userData;
-      console.log(userData);
-    });
+    this.subScriber$ = this.usersService
+      .getUser()
+      .pipe(tap((userData) => (this.user = userData)))
+      .subscribe();
+  }
+  ngOnDestroy(): void {
+    this.subScriber$.unsubscribe();
   }
 }

@@ -1,8 +1,9 @@
-import { Component, Input, Output } from '@angular/core';
-import { iUser } from '../Interfaces/Users';
+import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { IUser } from '../Interfaces/Users';
 import { NgClass } from '@angular/common';
 
 import { UsersService } from '../services/users.service';
+import { catchError, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-friend-search-item',
@@ -11,32 +12,42 @@ import { UsersService } from '../services/users.service';
   templateUrl: './friend-search-item.component.html',
   styleUrl: './friend-search-item.component.scss',
 })
-export class FriendSearchItemComponent {
-  @Input() userData?: iUser;
+export class FriendSearchItemComponent implements OnInit, OnDestroy {
+  @Input() otherUsersData?: IUser;
   following = false;
-  userId: string = '';
-  error?: String;
+  currentUserId: any = null;
+  error?: string;
 
-  constructor(private usersService: UsersService) {
-    this.usersService.userCache$?.subscribe((metaData) => {
-      if (metaData?.data) {
-        this.userId = metaData.data._id;
-      } else {
-        this.error = metaData?.error || 'data is available from cache';
-      }
-    });
+  subscriber$!: Subscription;
+
+  constructor(private usersService: UsersService) {}
+
+  ngOnInit(): void {
+    this.subscriber$ =this.usersService.getUser().pipe(
+      tap((userData) => (this.currentUserId = userData?._id)),
+      catchError((err) => (this.error = err.message))
+    ).subscribe();
+  }
+
+  ngOnDestroy(): void {
+     this.subscriber$.unsubscribe()
   }
 
   toggleFollowing() {
     this.following = !this.following;
     if (this.following) {
-      this.usersService.addFriend(this.userId, {
-        $push: { friends: this.userData?._id },
-      });
+      this.usersService
+        .updateFriendsList(this.currentUserId, {
+          $push: { friends: this.otherUsersData?._id },
+        })
+        .subscribe();
     } else {
-      this.usersService.addFriend(this.userId, {
-        $pull: { friends: this.userData?._id },
-      });
+      this.usersService
+        .updateFriendsList(this.currentUserId, {
+          $pull: { friends: this.otherUsersData?._id? },
+        })
+        .subscribe();
     }
   }
 }
+

@@ -85,7 +85,16 @@ label {
 
 .serverError {
   padding: 6px;
-  color: white;
+
   color: black;
   border: 1px solid black;
+}
+
+.success {
+  margin-top: 10px;
+  padding: 6px 10px;
+  border: 1px solid gray;
+  color: #00712d;
+
+  background-color: #def9c4;
 }

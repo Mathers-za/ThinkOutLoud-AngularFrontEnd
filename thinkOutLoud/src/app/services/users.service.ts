@@ -1,68 +1,77 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { ILoginForm, iUser } from '../Interfaces/Users';
 import {
-  BehaviorSubject,
-  catchError,
-  Observable,
-  of,
-  shareReplay,
-  tap,
-} from 'rxjs';
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpResponse,
+} from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { ILoginForm, IUser } from '../Interfaces/Users';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { HttpErrorHandlingService } from './http-error-handling.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
-  private userSubject$ = new BehaviorSubject<{
-    data: iUser | null;
-    error: any;
-  } | null>(null);
-  userCache$? = this.userSubject$.asObservable();
+  baseUrl = 'http://localhost:3000';
+  httpOptions = {
+    withCredentials: true,
+  };
 
-  constructor(private http: HttpClient) {
-    console.log('the Injection occured');
-    this.fetchUserData().subscribe();
-  }
-
-  registerUser(formData: ILoginForm) {
-    return this.http.post('/users/register', formData, {
-      withCredentials: true,
-    });
-  }
-
-  loginUser(formData: ILoginForm) {
-    return this.http.post('/user/login', formData, { withCredentials: true });
-  }
-
-  refetchUserData() {
-    this.fetchUserData();
-  }
-
-  private fetchUserData() {
+  constructor(
+    private http: HttpClient,
+    private httpErrorHandlingService: HttpErrorHandlingService
+  ) {}
+  registerUser(formData: ILoginForm): Observable<HttpResponse<object>> {
     return this.http
-      .get<iUser | null>('/users/getUserOnlogin', {
-        withCredentials: true,
+      .post(this.baseUrl + '/users/register', formData, {
+        ...this.httpOptions,
+        observe: 'response',
       })
       .pipe(
-        tap((userData) =>
-          this.userSubject$.next({ data: userData, error: null })
-        ),
-        catchError((err) => {
-          this.userSubject$.next({ data: null, error: err.message });
-          return of(null);
-        })
+        catchError((err) => this.httpErrorHandlingService.handleError(err))
       );
   }
 
-  filterAllUsersByName(searchString: string) {
-    return this.http.get<iUser[]>('/users/usersSearch', {
-      params: { searchString: searchString },
-      withCredentials: true,
-    });
+  getUser(): Observable<IUser> {
+    return this.http
+      .get<IUser>(this.baseUrl + '/users/getUserOnlogin', this.httpOptions)
+      .pipe(
+        catchError((err) => this.httpErrorHandlingService.handleError(err))
+      );
   }
 
-  addFriend(userId: string, body: any) {
-    this.http.patch(`users/update:${userId}`, body, { withCredentials: true });
+  loginUser(formData: ILoginForm): Observable<HttpResponse<object>> {
+    return this.http
+      .post(this.baseUrl + '/users/login', formData, {
+        ...this.httpOptions,
+        observe: 'response',
+      })
+      .pipe(
+        catchError((err) => this.httpErrorHandlingService.handleError(err))
+      );
+  }
+
+  filterAllUsersByName(searchString: string): Observable<IUser[]> {
+    return this.http
+      .get<IUser[]>(this.baseUrl + '/users/usersSearch', {
+        params: { searchString },
+        ...this.httpOptions,
+      })
+      .pipe(
+        catchError((err) => this.httpErrorHandlingService.handleError(err))
+      );
+  }
+
+  updateFriendsList(userId: string, body: any): Observable<void> {
+    return this.http
+      .patch<void>(
+        this.baseUrl + `users/update:${userId}`,
+        body,
+        this.httpOptions
+      )
+      .pipe(
+        catchError((err) => this.httpErrorHandlingService.handleError(err))
+      );
   }
 }

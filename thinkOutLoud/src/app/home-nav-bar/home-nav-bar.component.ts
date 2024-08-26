@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { iUser } from '../Interfaces/Users';
+import { IUser } from '../Interfaces/Users';
 
 @Component({
   selector: 'app-home-nav-bar',
@@ -9,7 +9,7 @@ import { iUser } from '../Interfaces/Users';
   styleUrl: './home-nav-bar.component.scss',
 })
 export class HomeNavBarComponent {
-  @Input() userData: null | iUser = null;
+  @Input() userData: null | IUser = null;
   initails =
     (this.userData?.firstName[0].toLocaleUpperCase() || 'D') +
     (this.userData?.lastName[0].toLocaleUpperCase() || 'M');

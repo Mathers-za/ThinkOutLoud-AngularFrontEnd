@@ -4,7 +4,11 @@
       <h1>{{ isRegistered ? "Login Page" : "Registration Page" }}</h1>
     </section>
     <section class="body">
-      <form #loginForm="ngForm" class="content_pos" (ngSubmit)="login()">
+      <form
+        #loginForm="ngForm"
+        class="content_pos"
+        (ngSubmit)="isRegistered ? login() : register()"
+      >
         <label *ngIf="!isRegistered">
           First name<input
             #firstName="ngModel"
@@ -127,6 +131,10 @@
 
       <p class="serverError" *ngIf="serverErrorMessage">
         {{ serverErrorMessage }}
+      </p>
+
+      <p class="success" *ngIf="successRegistrationMessage && isRegistered">
+        {{ successRegistrationMessage }}
       </p>
     </section>
   </div>
