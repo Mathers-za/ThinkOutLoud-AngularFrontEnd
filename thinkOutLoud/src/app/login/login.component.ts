@@ -7,11 +7,18 @@ import { ConfirmPasswordDirective } from '../shared/custom directives/confirm-pa
 import { Router } from '@angular/router';
 import { catchError, EMPTY, EmptyError, tap, throwError } from 'rxjs';
 import { HttpEvent, HttpResponse } from '@angular/common/http';
+import { FeedbackMessageComponent } from '../feedback-message/feedback-message.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgIf, FormsModule, NgClass, ConfirmPasswordDirective],
+  imports: [
+    NgIf,
+    FormsModule,
+    NgClass,
+    ConfirmPasswordDirective,
+    FeedbackMessageComponent,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -47,7 +54,7 @@ export class LoginComponent {
     clearTimeout(timeoutId);
 
     this.successRegistrationMessage =
-      'Successfully created your account. Go to login page';
+      'Successfully created your account. You can now login';
     this.toggleIsRegistered();
   }
 

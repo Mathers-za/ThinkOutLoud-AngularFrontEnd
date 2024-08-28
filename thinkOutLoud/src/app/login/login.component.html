@@ -129,13 +129,14 @@
         }}
       </p>
 
-      <p class="serverError" *ngIf="serverErrorMessage">
-        {{ serverErrorMessage }}
-      </p>
-
-      <p class="success" *ngIf="successRegistrationMessage && isRegistered">
-        {{ successRegistrationMessage }}
-      </p>
+      <ng-container *ngIf="serverErrorMessage || successRegistrationMessage">
+        <app-feedback-message
+          [fullWidth]="true"
+          [message]="
+            serverErrorMessage ? serverErrorMessage : successRegistrationMessage
+          "
+          [severity]="serverErrorMessage ? 'error' : 'success'"
+      /></ng-container>
     </section>
   </div>
 </div>

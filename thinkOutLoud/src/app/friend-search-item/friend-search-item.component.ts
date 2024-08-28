@@ -13,9 +13,9 @@ import { catchError, Subscription, tap } from 'rxjs';
   styleUrl: './friend-search-item.component.scss',
 })
 export class FriendSearchItemComponent implements OnInit, OnDestroy {
-  @Input() otherUsersData?: IUser;
+  @Input() friendData?: IUser;
   following = false;
-  currentUserId: any = null;
+  currentUserId:string | null = localStorage.getItem("userId")
   error?: string;
 
   subscriber$!: Subscription;
@@ -38,13 +38,13 @@ export class FriendSearchItemComponent implements OnInit, OnDestroy {
     if (this.following) {
       this.usersService
         .updateFriendsList(this.currentUserId, {
-          $push: { friends: this.otherUsersData?._id },
+          $push: { friends: this.friendData?._id },
         })
         .subscribe();
     } else {
       this.usersService
         .updateFriendsList(this.currentUserId, {
-          $pull: { friends: this.otherUsersData?._id? },
+          $pull: { friends: this.friendData?._id? },
         })
         .subscribe();
     }

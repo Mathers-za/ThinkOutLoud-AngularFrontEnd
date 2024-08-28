@@ -15,14 +15,21 @@ import { catchError, Observable, Subscription, tap, throwError } from 'rxjs';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   user: IUser | null = null;
-  serverError: string | null = null;
+  serverError: string = '';
   subScriber$!: Subscription;
   constructor(private usersService: UsersService) {}
 
   ngOnInit(): void {
     this.subScriber$ = this.usersService
       .getUser()
-      .pipe(tap((userData) => (this.user = userData)))
+      .pipe(
+        tap((userData) => {
+          if (!localStorage.getItem('userID')) {
+            localStorage.setItem('userId', userData._id);
+          }
+        }),
+        catchError((err) => (this.serverError = err.message))
+      )
       .subscribe();
   }
   ngOnDestroy(): void {

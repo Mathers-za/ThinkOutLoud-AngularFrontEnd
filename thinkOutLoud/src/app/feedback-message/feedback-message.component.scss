@@ -1,0 +1,23 @@
+.container {
+  padding: 10px 13px;
+  color: black;
+  min-width: fit-content;
+  display: inline-block;
+  font-size: medium;
+  border-radius: 5px;
+  border: 1px gray solid;
+}
+
+.success {
+  color: #00712d;
+
+  background-color: #def9c4;
+}
+
+.error {
+  background-color: red;
+}
+
+.warning {
+  background-color: orange;
+}
