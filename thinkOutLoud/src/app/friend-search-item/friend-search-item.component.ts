@@ -17,7 +17,7 @@ export class FriendSearchItemComponent implements OnDestroy, OnInit {
   @Input() friendData!: IUser;
 
   userData!: IUser | null;
-  following: boolean = this.isFollowing();
+  following: boolean = this.checkAndSetFollowingStatus();
   serverErrorMessage?: string;
 
   subscription$: Subscription | null = null;
@@ -35,16 +35,18 @@ export class FriendSearchItemComponent implements OnDestroy, OnInit {
         tap((userData) => {
           this.userData = userData;
 
-          this.isFollowing();
+          this.checkAndSetFollowingStatus();
         })
       )
       .subscribe();
   }
 
-  isFollowing(): boolean {
-    return this.userData
-      ? this.userData.friends.includes(this.friendData._id)
-      : false;
+  checkAndSetFollowingStatus(): void {
+    if (this.userData) {
+      this.userData.friends.includes(this.friendData._id)
+        ? (this.following = true)
+        : (this.following = false);
+    }
   }
 
   toggleFollowing() {
