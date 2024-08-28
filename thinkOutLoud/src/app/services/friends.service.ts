@@ -19,9 +19,9 @@ export class FriendsService {
   ) {}
 
   addFriend(friendId: string): Observable<HttpResponse<object>> {
-    const patchObject = { $push: { friend: friendId } };
+    const patchObject = { $push: { friends: friendId } };
     return this.http
-      .patch(this.apiBaseUrl + '/users/patch', patchObject, {
+      .patch(this.apiBaseUrl + '/users/update', patchObject, {
         ...this.httpOptions,
         observe: 'response',
       })
@@ -31,9 +31,9 @@ export class FriendsService {
   }
 
   removeFriend(friendId: string): Observable<HttpResponse<object>> {
-    const patchObject = { $pull: { friend: friendId } };
+    const patchObject = { $pull: { friends: friendId } };
     return this.http
-      .patch(this.apiBaseUrl + '/users/patch', patchObject, {
+      .patch(this.apiBaseUrl + '/users/update', patchObject, {
         ...this.httpOptions,
         observe: 'response',
       })

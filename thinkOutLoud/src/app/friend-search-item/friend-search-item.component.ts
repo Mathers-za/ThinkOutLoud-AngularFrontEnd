@@ -1,9 +1,10 @@
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { IUser } from '../Interfaces/Users';
 import { NgClass } from '@angular/common';
 
 import { UsersService } from '../services/users.service';
-import { catchError, Subscription, tap } from 'rxjs';
+import { catchError, EMPTY, Subscription, tap } from 'rxjs';
+import { FriendsService } from '../services/friends.service';
 
 @Component({
   selector: 'app-friend-search-item',
@@ -12,42 +13,72 @@ import { catchError, Subscription, tap } from 'rxjs';
   templateUrl: './friend-search-item.component.html',
   styleUrl: './friend-search-item.component.scss',
 })
-export class FriendSearchItemComponent implements OnInit, OnDestroy {
-  @Input() friendData?: IUser;
-  following = false;
-  currentUserId:string | null = localStorage.getItem("userId")
-  error?: string;
+export class FriendSearchItemComponent implements OnDestroy, OnInit {
+  @Input() friendData!: IUser;
 
-  subscriber$!: Subscription;
+  userData!: IUser | null;
+  following: boolean = this.isFollowing();
+  serverErrorMessage?: string;
 
-  constructor(private usersService: UsersService) {}
+  subscription$: Subscription | null = null;
+  userFeedBackMessage?: string;
+  userSubscription$ = new Subscription();
+
+  constructor(
+    private usersService: UsersService,
+    private friendService: FriendsService
+  ) {}
 
   ngOnInit(): void {
-    this.subscriber$ =this.usersService.getUser().pipe(
-      tap((userData) => (this.currentUserId = userData?._id)),
-      catchError((err) => (this.error = err.message))
-    ).subscribe();
+    this.userSubscription$ = this.usersService.user$
+      .pipe(
+        tap((userData) => {
+          this.userData = userData;
+
+          this.isFollowing();
+        })
+      )
+      .subscribe();
   }
 
-  ngOnDestroy(): void {
-     this.subscriber$.unsubscribe()
+  isFollowing(): boolean {
+    return this.userData
+      ? this.userData.friends.includes(this.friendData._id)
+      : false;
   }
 
   toggleFollowing() {
-    this.following = !this.following;
-    if (this.following) {
-      this.usersService
-        .updateFriendsList(this.currentUserId, {
-          $push: { friends: this.friendData?._id },
-        })
+    if (!this.following) {
+      this.subscription$ = this.friendService
+        .addFriend(this.friendData._id)
+        .pipe(
+          tap(() => {
+            this.following = true;
+            this.usersService.getUser();
+          }),
+          catchError((err) => {
+            this.serverErrorMessage = err;
+            return EMPTY;
+          })
+        )
         .subscribe();
     } else {
-      this.usersService
-        .updateFriendsList(this.currentUserId, {
-          $pull: { friends: this.friendData?._id? },
-        })
+      this.subscription$ = this.friendService
+        .removeFriend(this.friendData._id)
+        .pipe(
+          tap(() => (this.following = false)),
+          catchError((err) => {
+            this.serverErrorMessage = err;
+
+            return EMPTY;
+          })
+        )
         .subscribe();
     }
   }
-}
 
+  ngOnDestroy(): void {
+    this.subscription$?.unsubscribe();
+    this.userSubscription$.unsubscribe();
+  }
+}

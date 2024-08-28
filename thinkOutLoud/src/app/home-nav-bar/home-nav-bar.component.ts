@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home-nav-bar.component.scss',
 })
 export class HomeNavBarComponent {
-  @Input() userData: null | IUser = null;
+  @Input() userData!: null | IUser;
   initails =
     (this.userData?.firstName[0].toLocaleUpperCase() || 'D') +
     (this.userData?.lastName[0].toLocaleUpperCase() || 'M');

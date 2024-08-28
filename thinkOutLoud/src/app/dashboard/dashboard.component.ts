@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         tap((userData) => {
           if (!localStorage.getItem('userID')) {
             localStorage.setItem('userId', userData._id);
+            this.user = userData;
           }
         }),
         catchError((err) => (this.serverError = err.message))

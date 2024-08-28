@@ -11,13 +11,13 @@ export interface IUser {
 
   firstName: string;
   lastName: string;
-  friends?: string[];
+  friends: string[];
   email: string;
-  additionalInfo?: {
+  additionalInfo: {
     age?: number;
-    hobbies?: string[];
+    hobbies: string[];
     dateOfBirth?: Date;
-    relationshipStatus?: string[];
+    relationshipStatus: string[];
     countriesVisited?: string[];
   };
 }
