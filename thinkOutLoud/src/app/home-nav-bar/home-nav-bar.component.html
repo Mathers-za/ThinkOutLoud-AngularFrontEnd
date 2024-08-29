@@ -3,6 +3,7 @@
     <a>Feed</a>
     <a>Profile</a>
     <a routerLink="/dashboard/search">Invite friends</a>
+    <a (click)="toggleShowCreateEditPost()">Create a post</a>
     <a routerLink="/componentLibrary"> Component Library </a>
   </div>
   <div class="right">
@@ -11,3 +12,8 @@
     <a>Sign Out</a>
   </div>
 </div>
+
+<app-create-edit-post
+  (toggleVisiblity)="toggleShowCreateEditPost()"
+  *ngIf="showCreateEditPost"
+/>

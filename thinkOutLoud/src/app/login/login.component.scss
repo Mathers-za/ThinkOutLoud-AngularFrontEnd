@@ -59,22 +59,6 @@ label {
   color: blue;
 }
 
-.submitButton {
-  color: white;
-  padding: 8px 10px;
-  background-color: rgba($color: cadetblue, $alpha: 1);
-  border: none;
-  border-radius: 5px;
-  width: 100%;
-  margin-bottom: 8px;
-  font-size: medium;
-  cursor: pointer;
-}
-
-.submitButton:hover {
-  background-color: rgba($color: rgb(122, 195, 198), $alpha: 1);
-}
-
 .errorMessage {
   font-size: small;
   color: red;

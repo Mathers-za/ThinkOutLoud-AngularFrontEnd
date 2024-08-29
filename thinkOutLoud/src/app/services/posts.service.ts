@@ -8,8 +8,8 @@ import { HttpErrorHandlingService } from './http-error-handling.service';
   providedIn: 'root',
 })
 export class PostsService {
-  baseUrl = 'http://localhost:3000';
-  httpOptions = {
+  private baseUrl = 'http://localhost:3000';
+  private httpOptions = {
     withCredentials: true,
   };
   constructor(
@@ -17,7 +17,7 @@ export class PostsService {
     private httpErrorHandlingService: HttpErrorHandlingService
   ) {}
 
-  createPost(payload: IPostsSchema): Observable<IPostsSchema> {
+  createPost(payload: Partial<IPostsSchema>): Observable<IPostsSchema> {
     return this.http
       .post<IPostsSchema>(
         this.baseUrl + '/posts/createPost',
@@ -45,7 +45,7 @@ export class PostsService {
     changes: Partial<IPostsSchema>
   ): Observable<HttpResponse<object>> {
     return this.http
-      .patch(`/posts/updatePost${postId}`, changes, {
+      .patch(this.baseUrl + `/posts/updatePost${postId}`, changes, {
         ...this.httpOptions,
         observe: 'response',
       })

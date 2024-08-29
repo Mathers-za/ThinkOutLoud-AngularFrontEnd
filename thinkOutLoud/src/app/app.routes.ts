@@ -4,6 +4,7 @@ import { NotFoundPageComponent } from './not-found-page/not-found-page.component
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ComponentLibraryComponent } from './component-library/component-library.component';
 import { FriendSearchBarComponent } from './friend-search-bar/friend-search-bar.component';
+import { CreateEditPostComponent } from './create-edit-post/create-edit-post.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login Page' },
