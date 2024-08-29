@@ -16,8 +16,8 @@ import { FriendsService } from '../services/friends.service';
 export class FriendSearchItemComponent implements OnDestroy, OnInit {
   @Input() friendData!: IUser;
 
-  userData!: IUser | null;
-  following: boolean = this.checkAndSetFollowingStatus();
+  userData: IUser | null = null;
+  following: boolean = false;
   serverErrorMessage?: string;
 
   subscription$: Subscription | null = null;
@@ -56,7 +56,7 @@ export class FriendSearchItemComponent implements OnDestroy, OnInit {
         .pipe(
           tap(() => {
             this.following = true;
-            this.usersService.getUser();
+            this.usersService.getUser().subscribe();
           }),
           catchError((err) => {
             this.serverErrorMessage = err;
@@ -68,7 +68,10 @@ export class FriendSearchItemComponent implements OnDestroy, OnInit {
       this.subscription$ = this.friendService
         .removeFriend(this.friendData._id)
         .pipe(
-          tap(() => (this.following = false)),
+          tap(() => {
+            this.following = false;
+            this.usersService.getUser().subscribe();
+          }),
           catchError((err) => {
             this.serverErrorMessage = err;
 

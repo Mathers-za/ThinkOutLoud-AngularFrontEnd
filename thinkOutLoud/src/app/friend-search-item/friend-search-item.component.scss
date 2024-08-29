@@ -1,8 +1,8 @@
 .banner {
-  padding: 4px 2px;
+  padding: 6px 8px;
   color: white;
   cursor: pointer;
-  background-color: lightgray;
+  background-color: grey;
   transition: 0.3s;
 }
 
@@ -11,7 +11,7 @@
 }
 
 .banner:hover {
-  filter: brightness(120%);
+  background-color: darkblue;
 }
 
 .container {
