@@ -12,8 +12,10 @@
     <a>Sign Out</a>
   </div>
 </div>
-
-<app-create-edit-post
-  (toggleVisiblity)="toggleShowCreateEditPost()"
-  *ngIf="showCreateEditPost"
-/>
+<div *ngIf="showCreateEditPost" class="overlay-center-children">
+  <app-create-edit-post
+    appCloseModalOnClickOutisde
+    (clickedOutSide)="handleClickOutside()"
+    (toggleVisiblity)="toggleShowCreateEditPost()"
+  />
+</div>
