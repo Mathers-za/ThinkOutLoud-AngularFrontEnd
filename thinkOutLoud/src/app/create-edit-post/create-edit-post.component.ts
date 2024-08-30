@@ -5,11 +5,18 @@ import { IPostsSchema } from '../../interfaces/postInterfaces';
 import { catchError, EMPTY, tap } from 'rxjs';
 import { NgClass, NgIf } from '@angular/common';
 import { FeedbackMessageComponent } from '../feedback-message/feedback-message.component';
+import { CloseModalOnClickOutisdeDirective } from '../shared/custom directives/close-modal-on-click-outisde.directive';
 
 @Component({
   selector: 'app-create-edit-post',
   standalone: true,
-  imports: [FormsModule, NgIf, NgClass, FeedbackMessageComponent],
+  imports: [
+    FormsModule,
+    NgIf,
+    NgClass,
+    FeedbackMessageComponent,
+    CloseModalOnClickOutisdeDirective,
+  ],
   templateUrl: './create-edit-post.component.html',
   styleUrl: './create-edit-post.component.scss',
 })

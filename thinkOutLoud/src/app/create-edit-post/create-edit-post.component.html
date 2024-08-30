@@ -1,46 +1,55 @@
-<form
-  class="form"
-  #postForm="ngForm"
-  (ngSubmit)="isEdit ? editPost() : createPost()"
->
-  <h1>{{ isEdit ? "Edit Post" : "Whats on your mind" }}</h1>
-  <label class="form-group">
-    Create a post
-    <textarea
-      required
-      #content="ngModel"
-      rows="15"
-      name="content"
-      draggable="false"
-      id="content"
-      [(ngModel)]="postContent"
-    >
+<div class="overlay-center-children">
+  <form
+    appCloseModalOnClickOutisde
+    (clickedOutSide)="hideComponent()"
+    class="form"
+    #postForm="ngForm"
+    (ngSubmit)="isEdit ? editPost() : createPost()"
+  >
+    <h1>{{ isEdit ? "Edit Post" : "Whats on your mind" }}</h1>
+    <label class="form-group">
+      Create a post
+      <textarea
+        required
+        #content="ngModel"
+        rows="15"
+        name="content"
+        draggable="false"
+        id="content"
+        [(ngModel)]="postContent"
+      >
        {{ content }} 
      </textarea
-    >
+      >
 
-    <p *ngIf="content.invalid && content.hasError('require')">
-      Post content is required before
-      {{ isEdit ? "an edit can be applied" : "a post can be created." }}
-    </p>
-  </label>
-  <div class="button-group">
-    <button *ngIf="isEdit" class="btn btn-danger">Delete</button>
-    <button (click)="hideComponent()" *ngIf="!isEdit" type="button" class="btn">
-      Cancel
-    </button>
-    <button [disabled]="postForm.form.invalid" class="btn btn-primary">
-      {{
-        isEdit
-          ? "Save changes"
-          : isFirstPostCreated
-          ? "Created another"
-          : "Create post"
-      }}
-    </button>
-  </div>
-  <div (click)="hideComponent()" class="closeIcon">X</div>
-</form>
+      <p *ngIf="content.invalid && content.hasError('require')">
+        Post content is required before
+        {{ isEdit ? "an edit can be applied" : "a post can be created." }}
+      </p>
+    </label>
+    <div class="button-group">
+      <button *ngIf="isEdit" class="btn btn-danger">Delete</button>
+      <button
+        (click)="hideComponent()"
+        *ngIf="!isEdit"
+        type="button"
+        class="btn"
+      >
+        Cancel
+      </button>
+      <button [disabled]="postForm.form.invalid" class="btn btn-primary">
+        {{
+          isEdit
+            ? "Save changes"
+            : isFirstPostCreated
+            ? "Created another"
+            : "Create post"
+        }}
+      </button>
+    </div>
+    <div (click)="hideComponent()" class="closeIcon">X</div>
+  </form>
+</div>
 <app-feedback-message
   *ngIf="userErrorMessage || userSuccessMessage"
   [message]="userErrorMessage ? userErrorMessage : userSuccessMessage"

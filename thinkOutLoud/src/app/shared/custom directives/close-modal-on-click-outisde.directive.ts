@@ -39,8 +39,6 @@ export class CloseModalOnClickOutisdeDirective
   }
 
   checkClickedOutside(clickElement: HTMLElement): boolean {
-    console.log('ref element ' + JSON.stringify(this.refElement.nativeElement));
-    console.log('clciked element target ' + JSON.stringify(clickElement));
     return (
       clickElement === this.refElement.nativeElement ||
       this.refElement.nativeElement.contains(clickElement)
