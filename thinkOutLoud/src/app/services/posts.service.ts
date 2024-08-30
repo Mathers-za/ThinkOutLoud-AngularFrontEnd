@@ -31,7 +31,7 @@ export class PostsService {
 
   deletePost(postId: string): Observable<HttpResponse<object>> {
     return this.http
-      .delete(this.baseUrl + `/posts/delete${postId}`, {
+      .delete(this.baseUrl + `/posts/deletePost${postId}`, {
         ...this.httpOptions,
         observe: 'response',
       })

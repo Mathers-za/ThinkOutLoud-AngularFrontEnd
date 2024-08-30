@@ -28,7 +28,12 @@
       </p>
     </label>
     <div class="button-group">
-      <button *ngIf="isEdit" class="btn btn-danger">Delete</button>
+      <ng-container *ngIf="isEdit">
+        <button (click)="deletePost()" type="button" class="btn btn-danger">
+          Delete
+        </button></ng-container
+      >
+
       <button
         (click)="hideComponent()"
         *ngIf="!isEdit"
