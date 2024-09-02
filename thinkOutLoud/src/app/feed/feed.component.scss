@@ -2,4 +2,20 @@
   width: 100%;
   height: 100%;
   background-color: beige;
+  overflow: auto;
+}
+
+.loading {
+  font-size: large;
+  text-align: center;
+  padding: 10px;
+  margin-top: auto;
+}
+
+.refresh {
+  text-align: end;
+}
+
+.post-container {
+  margin: 10px 0;
 }

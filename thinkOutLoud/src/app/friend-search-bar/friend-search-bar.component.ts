@@ -27,7 +27,7 @@ export class FriendSearchBarComponent implements OnDestroy {
   timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
   serverErrorMessage: string = '';
   globalUsers: IUser[] | [] = [];
-  searchResultSubscription$$!: Subscription;
+  searchResultSubscription$!: Subscription;
 
   constructor(private usersService: UsersService) {}
   onSearch() {
@@ -40,7 +40,7 @@ export class FriendSearchBarComponent implements OnDestroy {
   }
 
   getUsersFromServer() {
-    this.searchResultSubscription$$ = this.usersService
+    this.searchResultSubscription$ = this.usersService
       .filterAllUsersByName(this.searchBarInput)
       .pipe(
         tap((usersArray) => (this.globalUsers = usersArray)),
@@ -50,6 +50,6 @@ export class FriendSearchBarComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.searchResultSubscription$$.unsubscribe();
+    this.searchResultSubscription$?.unsubscribe();
   }
 }

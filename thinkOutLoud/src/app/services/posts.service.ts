@@ -59,7 +59,7 @@ export class PostsService {
     pageSize: number
   ): Observable<IFeedPosts[] | []> {
     return this.http
-      .get<IFeedPosts[] | []>('/posts/getAllFriendsPosts', {
+      .get<IFeedPosts[] | []>(this.baseUrl + '/posts/getAllFriendsPosts', {
         ...this.httpOptions,
         params: { page, pageSize },
       })

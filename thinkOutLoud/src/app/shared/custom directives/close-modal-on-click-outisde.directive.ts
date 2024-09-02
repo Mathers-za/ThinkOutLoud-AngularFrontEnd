@@ -27,7 +27,7 @@ export class CloseModalOnClickOutisdeDirective
   ) {}
 
   ngAfterViewInit(): void {
-    fromEvent(this.document, 'click')
+    fromEvent(this.document, 'mousedown')
       .pipe(
         filter(
           (event) => !this.checkClickedOutside(event.target as HTMLElement)

@@ -1,0 +1,30 @@
+.container {
+  height: 100px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container {
+  display: flex;
+  background-color: black;
+  color: white;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-weight: 500;
+  font-size: larger;
+  text-wrap: balance;
+  height: 90%;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-top: 1px solid black;
+  justify-content: center;
+  align-items: center;
+}
+
+.post-footer {
+  display: flex;
+  height: auto;
+  justify-content: space-evenly;
+  background-color: gray;
+  border: 1px solid black;
+}

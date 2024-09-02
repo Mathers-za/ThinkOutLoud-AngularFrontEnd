@@ -1,1 +1,22 @@
-<div class="feed-container"></div>
+<div
+  class="feed-container"
+  infinite-scroll
+  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="500"
+  [scrollWindow]="false"
+  (scrolled)="onScroll()"
+>
+  <div class="refresh" (click)="onFeedRefresh()">Refresh</div>
+  <ng-container *ngIf="posts.length > 0">
+    <div class="post-container" *ngFor="let post of posts">
+      <app-feedpost [postContent]="post" />
+    </div>
+  </ng-container>
+  <div class="loading" *ngIf="isLoading">...loading</div>
+  <app-feedback-message
+    *ngIf="serverError"
+    [message]="serverError"
+    [fullWidth]="false"
+    severity="error"
+  />
+</div>

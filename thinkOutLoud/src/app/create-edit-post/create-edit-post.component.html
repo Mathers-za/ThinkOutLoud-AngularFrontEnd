@@ -42,7 +42,11 @@
       >
         Cancel
       </button>
-      <button [disabled]="postForm.form.invalid" class="btn btn-primary">
+      <button
+        type="submit"
+        [disabled]="postForm.form.invalid"
+        class="btn btn-primary"
+      >
         {{
           isEdit
             ? "Save changes"

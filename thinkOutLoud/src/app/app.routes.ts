@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ComponentLibraryComponent } from './component-library/component-library.component';
 import { FriendSearchBarComponent } from './friend-search-bar/friend-search-bar.component';
 import { CreateEditPostComponent } from './create-edit-post/create-edit-post.component';
+import { FeedComponent } from './feed/feed.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login Page' },
@@ -15,6 +16,7 @@ export const routes: Routes = [
     title: 'Dashboard',
     children: [
       { path: 'search', component: FriendSearchBarComponent, title: 'Search' },
+      { path: 'feed', component: FeedComponent, title: 'Feed' },
     ],
   },
 
