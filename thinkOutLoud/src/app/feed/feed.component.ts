@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IFeedPosts } from '../../interfaces/postInterfaces';
 import { PostsService } from '../services/posts.service';
-import { catchError, tap, of } from 'rxjs';
+import { catchError, tap, of, Subscription } from 'rxjs';
 import { NgFor, NgIf } from '@angular/common';
 import { FeedpostComponent } from '../feedpost/feedpost.component';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
@@ -20,12 +20,13 @@ import { FeedbackMessageComponent } from '../feedback-message/feedback-message.c
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.scss',
 })
-export class FeedComponent implements OnInit {
+export class FeedComponent implements OnInit, OnDestroy {
   page = 1;
   pageSize = 10;
   posts: IFeedPosts[] | [] = [];
   isLoading = false;
   serverError = '';
+  postsSubscription$!: Subscription;
 
   constructor(private postsService: PostsService) {}
 
@@ -35,7 +36,7 @@ export class FeedComponent implements OnInit {
 
   loadFeedPosts() {
     this.isLoading = true;
-    this.postsService
+    this.postsSubscription$ = this.postsService
       .getAllFriendsPosts(this.page, this.pageSize)
       .pipe(
         tap((postArray) => {
@@ -44,6 +45,7 @@ export class FeedComponent implements OnInit {
         }),
         catchError((err) => {
           this.serverError = err.message;
+          this.isLoading = false;
           return of([]);
         })
       )
@@ -55,5 +57,9 @@ export class FeedComponent implements OnInit {
     this.page = 1;
     this.posts = [];
     this.loadFeedPosts();
+  }
+
+  ngOnDestroy(): void {
+    this.postsSubscription$?.unsubscribe();
   }
 }
