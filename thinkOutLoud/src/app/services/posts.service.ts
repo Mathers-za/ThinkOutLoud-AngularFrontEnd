@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IPostsSchema } from '../../interfaces/postInterfaces';
+import { IFeedPosts, IPostsSchema } from '../../interfaces/postInterfaces';
 import { catchError, Observable } from 'rxjs';
 import { HttpErrorHandlingService } from './http-error-handling.service';
 
@@ -54,9 +54,15 @@ export class PostsService {
       );
   }
 
-  getAllFriendsPosts(): Observable<IPostsSchema[] | []> {
+  getAllFriendsPosts(
+    page: number,
+    pageSize: number
+  ): Observable<IFeedPosts[] | []> {
     return this.http
-      .get<IPostsSchema[] | []>('/posts/getAllFriendsPosts', this.httpOptions)
+      .get<IFeedPosts[] | []>('/posts/getAllFriendsPosts', {
+        ...this.httpOptions,
+        params: { page, pageSize },
+      })
       .pipe(
         catchError((err) => this.httpErrorHandlingService.handleError(err))
       );
