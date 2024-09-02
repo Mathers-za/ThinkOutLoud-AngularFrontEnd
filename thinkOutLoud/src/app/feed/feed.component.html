@@ -4,10 +4,10 @@
   [infiniteScrollDistance]="2"
   [infiniteScrollThrottle]="1000"
   [scrollWindow]="false"
-  (scrolled)="loadFeedPosts()"
+  (scrolled)="loadMorePosts()"
 >
-  <div class="refresh" (click)="onFeedRefresh()">Refresh</div>
-  <ng-container *ngIf="posts.length > 0">
+  <div class="refresh" (click)="refreshFeed()">Refresh</div>
+  <ng-container *ngIf="feedPosts$ | async as posts">
     <div class="post-container" *ngFor="let post of posts">
       <app-feedpost [postContent]="post" />
     </div>
