@@ -2,9 +2,9 @@
   class="feed-container"
   infinite-scroll
   [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="500"
+  [infiniteScrollThrottle]="1000"
   [scrollWindow]="false"
-  (scrolled)="onScroll()"
+  (scrolled)="loadFeedPosts()"
 >
   <div class="refresh" (click)="onFeedRefresh()">Refresh</div>
   <ng-container *ngIf="posts.length > 0">

@@ -39,25 +39,7 @@ export class FeedComponent implements OnInit {
       .getAllFriendsPosts(this.page, this.pageSize)
       .pipe(
         tap((postArray) => {
-          this.posts = postArray;
-          this.isLoading = false;
-          this.page += 1;
-        }),
-        catchError((err) => {
-          this.serverError = err.message;
-          return of([]);
-        })
-      )
-      .subscribe();
-  }
-
-  onScroll() {
-    this.isLoading = true;
-    this.postsService
-      .getAllFriendsPosts(this.page, this.pageSize)
-      .pipe(
-        tap((postsArray) => {
-          this.posts = [...this.posts, ...postsArray];
+          this.posts = [...this.posts, ...postArray];
           this.isLoading = false;
         }),
         catchError((err) => {

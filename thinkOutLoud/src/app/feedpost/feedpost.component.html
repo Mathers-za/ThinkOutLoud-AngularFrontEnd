@@ -1,4 +1,13 @@
 <div class="container">
+  <div class="header">
+    {{ postContent.createdAt | date : "yyyy-MM-dd H:mm" }}
+
+    {{
+      postContent.creatorDetails.firstName +
+        " " +
+        postContent.creatorDetails.lastName
+    }}
+  </div>
   <div class="content-container">
     {{ postContent.content }}
   </div>

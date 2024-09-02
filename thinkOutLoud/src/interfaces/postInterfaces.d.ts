@@ -20,6 +20,8 @@ export interface IFeedPosts extends IPostsSchema {
     friends: string[];
     email: string;
   };
+  createdAt: Date;
+  updatedAt: Date;
 
   numComments: number;
 }
