@@ -13,6 +13,8 @@ $success-color-darker: #16a34a;
 $success-color-lighter: #4ade80;
 $disabled-grey: #94a3b8;
 $default-buttonColor: #94a3b8;
+$standard-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+  0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 body {
   font-size: 1rem;
@@ -107,4 +109,8 @@ html {
 .input-helperText {
   font-size: small;
   color: $disabled-grey;
+}
+
+.boxShadow {
+  box-shadow: $standard-box-shadow; //need to be a mixin. once you sort out why imprpots arent working
 }

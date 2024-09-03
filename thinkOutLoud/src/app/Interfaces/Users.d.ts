@@ -13,11 +13,7 @@ export interface IUser {
   lastName: string;
   friends: string[];
   email: string;
-  additionalInfo: {
-    age?: number;
-    hobbies: string[];
-    dateOfBirth?: Date;
-    relationshipStatus: string[];
-    countriesVisited?: string[];
-  };
+  bio?: string;
+  age?: number;
+  gender?: 'Male' | 'Female' | 'Other' | '';
 }

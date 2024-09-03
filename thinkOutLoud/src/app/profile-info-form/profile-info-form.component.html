@@ -1,0 +1,38 @@
+<div class="overlay-center-children">
+  <form
+    [formGroup]="profileForm"
+    (ngSubmit)="handleSubmit()"
+    class="form-card boxShadow"
+  >
+    <h1>Edit Profile</h1>
+
+    <label>
+      <h2>Gender</h2>
+      <select formControlName="gender" id="gender">
+        //value = formcontrol
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+        <option value="">Would prefer not to say</option>
+      </select>
+    </label>
+
+    <label>
+      <h2>Bio</h2>
+      <textarea
+        class="text-area"
+        formControlName="bio"
+        id="bio"
+        maxlength="150"
+        cols="80"
+        rows="5"
+      >
+      </textarea>
+    </label>
+
+    <label
+      ><h2>Age</h2>
+      <input formControlName="age" id="age" type="number"
+    /></label>
+  </form>
+</div>
