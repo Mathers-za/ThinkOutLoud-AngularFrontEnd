@@ -2,10 +2,23 @@ import { Component, OnDestroy } from '@angular/core';
 import { IUser } from '../Interfaces/Users';
 
 import { UsersService } from '../services/users.service';
-import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { FriendSearchItemComponent } from '../friend-search-item/friend-search-item.component';
-import { catchError, Observable, Subscription, tap } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  EMPTY,
+  Observable,
+  Subscription,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { FeedbackMessageComponent } from '../feedback-message/feedback-message.component';
 
 @Component({
@@ -17,39 +30,28 @@ import { FeedbackMessageComponent } from '../feedback-message/feedback-message.c
     NgFor,
     FriendSearchItemComponent,
     FeedbackMessageComponent,
+    ReactiveFormsModule,
+    AsyncPipe,
   ],
   templateUrl: './friend-search-bar.component.html',
   styleUrl: './friend-search-bar.component.scss',
 })
-export class FriendSearchBarComponent implements OnDestroy {
-  searchBarInput: string = '';
+export class FriendSearchBarComponent {
+  searchBarInput = new FormControl<string>('', Validators.required);
+  errorMessage = '';
 
-  timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
-  serverErrorMessage: string = '';
-  globalUsers: IUser[] | [] = [];
-  searchResultSubscription$!: Subscription;
+  usersList$: Observable<IUser[]> = this.searchBarInput.valueChanges.pipe(
+    debounceTime(600),
+    switchMap((searchInputString) =>
+      this.usersService.filterAllUsersByName(searchInputString ?? '').pipe(
+        catchError((err) => {
+          console.error(err);
+          this.errorMessage = 'Something went wrong. Please try again';
+          return EMPTY;
+        })
+      )
+    )
+  );
 
   constructor(private usersService: UsersService) {}
-  onSearch() {
-    if (this.searchBarInput) {
-      clearTimeout(this.timeoutId);
-      this.timeoutId = setTimeout(() => {
-        this.getUsersFromServer();
-      }, 500);
-    }
-  }
-
-  getUsersFromServer() {
-    this.searchResultSubscription$ = this.usersService
-      .filterAllUsersByName(this.searchBarInput)
-      .pipe(
-        tap((usersArray) => (this.globalUsers = usersArray)),
-        catchError((err) => (this.serverErrorMessage = err.message))
-      )
-      .subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this.searchResultSubscription$?.unsubscribe();
-  }
 }

@@ -1,19 +1,19 @@
 <div class="container">
   <div class="formGroup">
     <input
-      [(ngModel)]="searchBarInput"
-      name="searchBarInput"
+      [formControl]="searchBarInput"
       placeholder="Search For Friends"
       type="text"
-      (keyup)="onSearch()"
     />
+    <p *ngIf="searchBarInput.invalid && searchBarInput.touched">
+      Input is required
+    </p>
     <p>Search by fist name or last name</p>
   </div>
 
-  <ng-container *ngIf="globalUsers.length > 0">
-    <app-friend-search-item
-      *ngFor="let user of globalUsers"
-      [friendData]="user"
-    />
+  <ng-container *ngIf="usersList$ | async as users">
+    <app-friend-search-item *ngFor="let user of users" [friendData]="user" />
   </ng-container>
 </div>
+
+<app-feedback-message [message]="errorMessage" severity="error" />

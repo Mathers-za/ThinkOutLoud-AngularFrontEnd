@@ -1,4 +1,5 @@
 <div
+  *ngIf="message"
   [ngClass]="{
     error: severity === 'error',
     success: severity === 'success',
