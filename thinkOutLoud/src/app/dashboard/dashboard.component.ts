@@ -16,7 +16,7 @@ import { catchError, Observable, Subscription, tap, throwError } from 'rxjs';
 export class DashboardComponent implements OnInit, OnDestroy {
   user: IUser | null = null;
   serverError: string = '';
-  subScriber$!: Subscription;
+  subScriber$?: Subscription;
   constructor(private usersService: UsersService) {}
 
   ngOnInit(): void {
@@ -34,6 +34,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe();
   }
   ngOnDestroy(): void {
-    this.subScriber$.unsubscribe();
+    this.subScriber$?.unsubscribe();
   }
 }
