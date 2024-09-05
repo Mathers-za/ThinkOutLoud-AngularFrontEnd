@@ -7,7 +7,9 @@
     <a routerLink="/componentLibrary"> Component Library </a>
   </div>
   <div class="right">
-    <div class="iconName">{{ initails }}</div>
+    <div *ngIf="user$ | async as user" class="iconName">
+      {{ user.firstName[0] + user.lastName[0] }}
+    </div>
     <a>Settings</a>
     <a>Sign Out</a>
   </div>
