@@ -13,10 +13,5 @@
     </div>
   </ng-container>
   <div class="loading" *ngIf="isLoading">...loading</div>
-  <app-feedback-message
-    *ngIf="serverError"
-    [message]="serverError"
-    [fullWidth]="false"
-    severity="error"
-  />
+  <app-feedback-message [message]="serverError" severity="error" />
 </div>

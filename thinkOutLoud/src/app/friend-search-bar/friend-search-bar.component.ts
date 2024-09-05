@@ -40,6 +40,8 @@ export class FriendSearchBarComponent {
   searchBarInput = new FormControl<string>('', Validators.required);
   errorMessage = '';
 
+  constructor(private usersService: UsersService) {}
+
   usersList$: Observable<IUser[]> = this.searchBarInput.valueChanges.pipe(
     debounceTime(600),
     switchMap((searchInputString) =>
@@ -52,6 +54,4 @@ export class FriendSearchBarComponent {
       )
     )
   );
-
-  constructor(private usersService: UsersService) {}
 }

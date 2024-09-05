@@ -18,8 +18,8 @@ export class UsersService {
     withCredentials: true,
   };
 
-  private userSubject$ = new BehaviorSubject<IUser | null>(null);
-  readonly user$ = this.userSubject$.asObservable();
+  private userBehaviourSubject$ = new BehaviorSubject<IUser | null>(null);
+  readonly user$ = this.userBehaviourSubject$.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -40,7 +40,7 @@ export class UsersService {
     return this.http
       .get<IUser>(this.baseUrl + '/users/getUserOnlogin', this.httpOptions)
       .pipe(
-        tap((userData) => this.userSubject$.next(userData)),
+        tap((userData) => this.userBehaviourSubject$.next(userData)),
         catchError((err) => this.httpErrorHandlingService.handleError(err))
       );
   }
