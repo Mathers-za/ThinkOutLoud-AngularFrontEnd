@@ -8,7 +8,6 @@
     <p *ngIf="searchBarInput.invalid && searchBarInput.touched">
       Input is required
     </p>
-    <p>Search by fist name or last name</p>
   </div>
 
   <ng-container *ngIf="usersList$ | async as users">
