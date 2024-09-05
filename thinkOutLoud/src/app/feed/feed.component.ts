@@ -11,6 +11,7 @@ import {
   switchMap,
   scan,
   EMPTY,
+  mergeScan,
 } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { FeedpostComponent } from '../feedpost/feedpost.component';
@@ -31,41 +32,38 @@ import { FeedbackMessageComponent } from '../feedback-message/feedback-message.c
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.scss',
 })
-export class FeedComponent implements OnInit {
+export class FeedComponent {
   pageSize = 10;
 
   isLoading = false;
   serverError = '';
-  postsSubscription$!: Subscription;
-  page$ = new BehaviorSubject<number>(1);
-  feedPosts$!: Observable<IFeedPosts[] | []>;
 
-  constructor(private postsService: PostsService) {}
-
-  ngOnInit(): void {
-    this.feedPosts$ = this.page$.pipe(
+  readonly page$ = new BehaviorSubject<number>(1);
+  feedPosts$: Observable<IFeedPosts[]> = this.page$
+    .pipe(
       tap(() => (this.isLoading = true)),
-      switchMap((pageNum) =>
-        this.postsService.getAllFriendsPosts(pageNum, this.pageSize).pipe(
+      switchMap((pageNumber) =>
+        this.postsService.getAllFriendsPosts(pageNumber, this.pageSize).pipe(
+          tap(() => (this.isLoading = false)),
           catchError((err) => {
             this.serverError = err;
-            this.isLoading = false;
             return EMPTY;
           })
         )
-      ),
-      scan((acc: IFeedPosts[] | [], value: IFeedPosts[]) => {
-        if (this.page$.value === 1) {
-          return value;
-        }
-        return (acc = [...acc, ...value]);
-      }, []),
-      tap(() => (this.isLoading = false))
+      )
+    )
+    .pipe(
+      scan((accum: IFeedPosts[], newlyFetchedPosts: IFeedPosts[]) => {
+        return this.page$.getValue() === 1
+          ? newlyFetchedPosts
+          : [...accum, ...newlyFetchedPosts];
+      }, [])
     );
-  }
+
+  constructor(private postsService: PostsService) {}
 
   loadMorePosts() {
-    this.page$.next(this.page$.value + 1);
+    this.page$.next(this.page$.getValue() + 1);
   }
 
   refreshFeed() {
