@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { ILoginForm, IUser } from '../Interfaces/Users';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { HttpErrorHandlingService } from './http-error-handling.service';
+import { IProfileForm } from '../profile-info-form/profile-info-form.component';
 
 @Injectable({
   providedIn: 'root',
@@ -62,6 +63,14 @@ export class UsersService {
         params: { searchString },
         ...this.httpOptions,
       })
+      .pipe(
+        catchError((err) => this.httpErrorHandlingService.handleError(err))
+      );
+  }
+
+  updateUser(payload: { $set: IProfileForm }) {
+    return this.http
+      .patch(this.baseUrl + '/users/update', payload, this.httpOptions)
       .pipe(
         catchError((err) => this.httpErrorHandlingService.handleError(err))
       );

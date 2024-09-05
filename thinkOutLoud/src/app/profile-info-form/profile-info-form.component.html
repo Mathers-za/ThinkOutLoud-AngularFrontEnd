@@ -9,7 +9,6 @@
     <label>
       <h2>Gender</h2>
       <select formControlName="gender" id="gender">
-        //value = formcontrol
         <option value="Male">Male</option>
         <option value="Female">Female</option>
         <option value="Other">Other</option>
@@ -34,5 +33,11 @@
       ><h2>Age</h2>
       <input formControlName="age" id="age" type="number"
     /></label>
+    <button class="btn btn-primary">Save</button>
   </form>
 </div>
+
+<app-feedback-message
+  [message]="errorMessage ? errorMessage : successMessage"
+  [severity]="successMessage ? 'success' : 'error'"
+/>
