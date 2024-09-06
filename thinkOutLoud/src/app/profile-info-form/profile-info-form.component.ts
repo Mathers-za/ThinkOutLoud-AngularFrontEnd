@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -11,11 +11,6 @@ import { UsersService } from '../services/users.service';
 import { catchError, EMPTY, Subscription, tap } from 'rxjs';
 import { FeedbackMessageComponent } from '../feedback-message/feedback-message.component';
 import { IUser } from '../Interfaces/Users';
-export interface IProfileForm {
-  bio: string | null;
-  age: number | null;
-  gender: 'Male' | 'Female' | 'Other' | '';
-}
 
 @Component({
   selector: 'app-profile-info-form',
@@ -24,28 +19,41 @@ export interface IProfileForm {
   templateUrl: './profile-info-form.component.html',
   styleUrl: './profile-info-form.component.scss',
 })
-export class ProfileInfoFormComponent implements OnInit, OnDestroy {
+export class ProfileInfoFormComponent implements OnDestroy, OnInit {
   userData: IUser | null = null;
   userSubsciption?: Subscription;
   profileForm = new FormGroup({
-    age: new FormControl<number | null>(
-      this.userData?.age ?? null,
-      Validators.min(0)
-    ),
-    bio: new FormControl(this.userData?.bio ?? '', Validators.maxLength(150)),
-    gender: new FormControl(
-      this.userData?.gender ?? '',
-      isOneOfSelection(['Male', 'Female', 'Other', ''])
-    ),
+    age: new FormControl<number | undefined>(undefined, {
+      validators: Validators.min(0),
+      nonNullable: true,
+    }),
+    bio: new FormControl('', {
+      validators: Validators.maxLength(150),
+      nonNullable: true,
+    }),
+    gender: new FormControl<'Male' | 'Female' | 'Other' | ''>('', {
+      validators: isOneOfSelection(['Male', 'Female', 'Other', '']),
+      nonNullable: true,
+    }),
   });
-
   errorMessage = '';
   successMessage = '';
   constructor(private userServce: UsersService) {}
 
   ngOnInit(): void {
-    this.userSubsciption = this.userServce.user$
-      .pipe(tap((userData) => (this.userData = userData)))
+    this.userServce.user$
+      .pipe(
+        tap((data) => {
+          this.userData = data;
+          if (this.userData) {
+            this.profileForm.setValue({
+              age: this.userData.age,
+              bio: this.userData?.bio ?? '',
+              gender: this.userData?.gender ?? '',
+            });
+          }
+        })
+      )
       .subscribe();
   }
 
@@ -56,7 +64,7 @@ export class ProfileInfoFormComponent implements OnInit, OnDestroy {
   handleSubmit(): void {
     this.userServce
       .updateUser({
-        $set: this.profileForm.value as IProfileForm,
+        $set: this.profileForm.value,
       })
       .pipe(
         tap(() => (this.successMessage = 'Update successful')),

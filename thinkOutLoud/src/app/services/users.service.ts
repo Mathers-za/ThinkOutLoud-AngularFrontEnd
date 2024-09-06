@@ -1,14 +1,8 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-  HttpResponse,
-} from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ILoginForm, IUser } from '../Interfaces/Users';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { HttpErrorHandlingService } from './http-error-handling.service';
-import { IProfileForm } from '../profile-info-form/profile-info-form.component';
 
 @Injectable({
   providedIn: 'root',
@@ -68,7 +62,7 @@ export class UsersService {
       );
   }
 
-  updateUser(payload: { $set: IProfileForm }) {
+  updateUser(payload: { $set: Partial<IUser> }) {
     return this.http
       .patch(this.baseUrl + '/users/update', payload, this.httpOptions)
       .pipe(
