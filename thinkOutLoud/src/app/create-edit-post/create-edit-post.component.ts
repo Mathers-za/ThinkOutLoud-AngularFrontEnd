@@ -103,14 +103,14 @@ export class CreateEditPostComponent implements OnInit, OnDestroy {
         .deletePost(this.postData?._id)
         .pipe(
           tap((response) => {
-            if (response.status === 204) {
+            if (!response.success) {
               this.userSuccessMessage = 'Post successfully deleted';
               setTimeout(() => {
                 this.hideComponent();
               }, 1000);
             }
           }),
-          catchError((err) => {
+          catchError(() => {
             this.userErrorMessage = 'Post failed to delete. Please try again';
             return EMPTY;
           })

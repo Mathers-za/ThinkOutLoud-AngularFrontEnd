@@ -19,10 +19,11 @@ import { IUser } from '../Interfaces/Users';
   styleUrl: './profile-info-form.component.scss',
 })
 export class ProfileInfoFormComponent implements OnDestroy, OnInit {
-  userData: IUser | null = null;
-  userSubsciption?: Subscription;
+  userData!: IUser;
+  subscriptions = new Subscription();
+
   profileForm = new FormGroup({
-    age: new FormControl<number | undefined>(undefined, {
+    age: new FormControl<string>(undefined, {
       validators: Validators.min(0),
       nonNullable: true,
     }),
@@ -37,34 +38,42 @@ export class ProfileInfoFormComponent implements OnDestroy, OnInit {
   });
   errorMessage = '';
   successMessage = '';
-  constructor(private userServce: UsersService) {}
+  constructor(private userService: UsersService) {}
 
   ngOnInit(): void {
-    this.userServce.user$
-      .pipe(
-        tap((data) => {
-          this.userData = data;
-          if (this.userData) {
+    this.subscriptions.add(
+      this.userService
+        .getUser()
+        .pipe(
+          tap(({ data }) => {
+            this.userData = data;
+
             this.profileForm.setValue({
-              age: this.userData.age,
+              age: this.userData?.age ? this.userData.age.toString() : '',
               bio: this.userData?.bio ?? '',
               gender: this.userData?.gender ?? '',
             });
-          }
-        })
-      )
-      .subscribe();
+          })
+        )
+        .subscribe()
+    );
   }
 
   ngOnDestroy(): void {
-    this.userSubsciption?.unsubscribe();
+    this.subscriptions?.unsubscribe();
   }
 
   handleSubmit(): void {
-    this.userServce
-      .updateUser({
-        $set: this.profileForm.value,
-      })
+    this.userService
+      .updateUser(
+        {
+          $set: {
+            ...this.profileForm.value,
+            age: Number(this.profileForm.value.age),
+          },
+        },
+        this.userData._id.toString()
+      )
       .pipe(
         tap(() => (this.successMessage = 'Update successful')),
         catchError((err) => {

@@ -30,7 +30,7 @@ export class LoginComponent {
     password: '',
     passwordConfirm: '',
   };
-
+  successfulRegistrationTimeout: ReturnType<typeof setTimeout> | null = null;
   serverErrorMessage: string = '';
   successRegistrationMessage = '';
   isRegistered = true;
@@ -50,12 +50,15 @@ export class LoginComponent {
   }
 
   handleSuccessfulRegistration() {
-    let timeoutId;
-    clearTimeout(timeoutId);
+    if (this.successfulRegistrationTimeout) {
+      clearTimeout(this.successfulRegistrationTimeout);
+    }
 
-    this.successRegistrationMessage =
-      'Successfully created your account. You can now login';
-    this.toggleIsRegistered();
+    this.successfulRegistrationTimeout = setTimeout(() => {
+      this.successRegistrationMessage =
+        'Successfully created your account. You can now login';
+      this.toggleIsRegistered();
+    }, 1000);
   }
 
   login() {

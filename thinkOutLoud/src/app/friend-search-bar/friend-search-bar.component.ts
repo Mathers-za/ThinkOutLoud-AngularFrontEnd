@@ -45,13 +45,15 @@ export class FriendSearchBarComponent {
   usersList$: Observable<IUser[]> = this.searchBarInput.valueChanges.pipe(
     debounceTime(600),
     switchMap((searchInputString) =>
-      this.usersService.filterAllUsersByName(searchInputString ?? '').pipe(
-        catchError((err) => {
-          console.error(err);
-          this.errorMessage = 'Something went wrong. Please try again';
-          return EMPTY;
-        })
-      )
+      this.usersService
+        .searchUsersByNameOrSurname(searchInputString ?? '')
+        .pipe(
+          catchError((err) => {
+            console.error(err);
+            this.errorMessage = 'Something went wrong. Please try again';
+            return EMPTY;
+          })
+        )
     )
   );
 }

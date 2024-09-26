@@ -22,21 +22,21 @@ export class UsersService {
     withCredentials: true,
   };
 
-  private userBehaviourSubject$ = new BehaviorSubject<IUser | null>(null);
-  readonly user$ = this.userBehaviourSubject$.asObservable();
   private refresh$ = new BehaviorSubject<void>(undefined);
 
   constructor(
     private http: HttpClient,
     private httpErrorHandlingService: HttpErrorHandlingService
   ) {}
-  registerUser(
-    formData: ILoginForm
-  ): Observable<{ success: boolean; message: string }> {
+  registerUser(formData: ILoginForm) {
     return this.http
-      .post(this.baseUrl + 'api/user/registerUser', formData, {
-        ...this.httpOptions,
-      })
+      .post<{ success: boolean; message: string }>(
+        this.baseUrl + '/api/user/registerUser',
+        formData,
+        {
+          ...this.httpOptions,
+        }
+      )
       .pipe(
         catchError((err) => this.httpErrorHandlingService.handleError(err))
       );
@@ -63,21 +63,25 @@ export class UsersService {
     this.refresh$.next();
   }
 
-  loginUser(
-    formData: ILoginForm
-  ): Observable<{ success: boolean; message: string; data: IUser }> {
+  loginUser(formData: ILoginForm) {
     return this.http
-      .post(this.baseUrl + 'api/user/login', formData, {
-        ...this.httpOptions,
-      })
+      .post<{ success: boolean; message: string; data: IUser }>(
+        this.baseUrl + '/api/user/login',
+        formData,
+        {
+          ...this.httpOptions,
+        }
+      )
       .pipe(
         catchError((err) => this.httpErrorHandlingService.handleError(err))
       );
   }
 
-  filterAllUsersByName(searchString: string = ''): Observable<IUser[] | []> {
+  searchUsersByNameOrSurname(
+    searchString: string = ''
+  ): Observable<IUser[] | []> {
     return this.http
-      .get<IUser[]>(this.baseUrl + 'api/users/search', {
+      .get<IUser[]>(this.baseUrl + '/api/user/search', {
         params: { searchString, limit: '20' },
         ...this.httpOptions,
       })
@@ -89,11 +93,12 @@ export class UsersService {
   updateUser(payload: { $set: Partial<IUser> }, id: string) {
     return this.http
       .patch(
-        this.baseUrl + `/api/users/updateUser${id}`,
+        this.baseUrl + `/api/user/updateUser${id}`,
         payload,
         this.httpOptions
       )
       .pipe(
+        tap(() => this.refresh$.next()),
         catchError((err) => this.httpErrorHandlingService.handleError(err))
       );
   }

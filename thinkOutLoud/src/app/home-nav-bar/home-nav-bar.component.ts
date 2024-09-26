@@ -5,7 +5,7 @@ import { CreateEditPostComponent } from '../create-edit-post/create-edit-post.co
 import { AsyncPipe, NgIf } from '@angular/common';
 import { CloseModalOnClickOutisdeDirective } from '../shared/custom directives/close-modal-on-click-outisde.directive';
 import { UsersService } from '../services/users.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home-nav-bar',
@@ -21,7 +21,9 @@ import { Observable } from 'rxjs';
   styleUrl: './home-nav-bar.component.scss',
 })
 export class HomeNavBarComponent {
-  user$: Observable<IUser | null> = this.usersService.user$;
+  user$: Observable<IUser | null> = this.usersService
+    .getUser()
+    .pipe(map((value) => value.data));
 
   showCreateEditPost = false;
 
