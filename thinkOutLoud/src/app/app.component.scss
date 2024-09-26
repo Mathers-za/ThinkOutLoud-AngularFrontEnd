@@ -1,1 +1,7 @@
+@import "../styles//variables.scss";
+@import "../styles/base/positioning";
 
+.my-test {
+  font-size: $textSize;
+  @include mt;
+}

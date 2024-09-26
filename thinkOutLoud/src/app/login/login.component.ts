@@ -49,7 +49,7 @@ export class LoginComponent {
     this.successRegistrationMessage = '';
   }
 
-  handleSuccessfullRegistration() {
+  handleSuccessfulRegistration() {
     let timeoutId;
     clearTimeout(timeoutId);
 
@@ -63,8 +63,8 @@ export class LoginComponent {
       .loginUser(this.formData)
       .pipe(
         tap((response) => {
-          console.log(response.status);
-          if (response.status === 200) {
+          if (response.success) {
+            sessionStorage.setItem('userId', response.data._id.toString());
             this.router.navigate(['dashboard']);
           }
         }),
@@ -79,11 +79,11 @@ export class LoginComponent {
     this.usersService
       .registerUser(this.formData)
       .pipe(
-        tap((httpResponse) =>
-          httpResponse.status === 201
-            ? this.handleSuccessfullRegistration()
-            : null
-        ),
+        tap((response) => {
+          if (response.success) {
+            this.handleSuccessfulRegistration();
+          }
+        }),
         catchError((err) => {
           this.serverErrorMessage = err;
           return EMPTY;

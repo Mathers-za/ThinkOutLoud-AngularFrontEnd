@@ -20,7 +20,6 @@ export class FriendSearchItemComponent implements OnDestroy, OnInit {
   following: boolean = false;
   serverErrorMessage?: string;
 
-  subscription$: Subscription | null = null;
   userFeedBackMessage?: string;
   userSubscription$ = new Subscription();
 
@@ -30,15 +29,18 @@ export class FriendSearchItemComponent implements OnDestroy, OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userSubscription$ = this.usersService.user$
-      .pipe(
-        tap((userData) => {
-          this.userData = userData;
+    this.userSubscription$.add(
+      this.usersService
+        .getUser()
+        .pipe(
+          tap(({ data }) => {
+            this.userData = data;
 
-          this.checkAndSetFollowingStatus();
-        })
-      )
-      .subscribe();
+            this.checkAndSetFollowingStatus();
+          })
+        )
+        .subscribe()
+    );
   }
 
   checkAndSetFollowingStatus(): void {
@@ -51,39 +53,42 @@ export class FriendSearchItemComponent implements OnDestroy, OnInit {
 
   toggleFollowing() {
     if (!this.following) {
-      this.subscription$ = this.friendService
-        .addFriend(this.friendData._id)
-        .pipe(
-          tap(() => {
-            this.following = true;
-            this.usersService.getUser().subscribe();
-          }),
-          catchError((err) => {
-            this.serverErrorMessage = err;
-            return EMPTY;
-          })
-        )
-        .subscribe();
+      this.userSubscription$.add(
+        this.friendService
+          .addFriend(this.friendData._id)
+          .pipe(
+            tap(() => {
+              this.following = !this.following;
+              this.usersService.refreshUser();
+            }),
+            catchError((err) => {
+              this.serverErrorMessage = err;
+              return EMPTY;
+            })
+          )
+          .subscribe()
+      );
     } else {
-      this.subscription$ = this.friendService
-        .removeFriend(this.friendData._id)
-        .pipe(
-          tap(() => {
-            this.following = false;
-            this.usersService.getUser().subscribe();
-          }),
-          catchError((err) => {
-            this.serverErrorMessage = err;
+      this.userSubscription$.add(
+        this.friendService
+          .removeFriend(this.friendData._id)
+          .pipe(
+            tap(() => {
+              this.following = false;
+              this.usersService.getUser().subscribe();
+            }),
+            catchError((err) => {
+              this.serverErrorMessage = err;
 
-            return EMPTY;
-          })
-        )
-        .subscribe();
+              return EMPTY;
+            })
+          )
+          .subscribe()
+      );
     }
   }
 
   ngOnDestroy(): void {
-    this.subscription$?.unsubscribe();
     this.userSubscription$.unsubscribe();
   }
 }

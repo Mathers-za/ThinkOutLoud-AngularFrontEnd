@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "base/positioning";
+@import "base/positioning", "variables.scss";
 $overlay-transparent-background: rgba(0, 0, 0, 0.5);
 $primary-color: #0ea5e9;
 $primary-color-darker: #0284c7;
@@ -113,4 +113,8 @@ html {
 
 .boxShadow {
   box-shadow: $standard-box-shadow; //need to be a mixin. once you sort out why imprpots arent working
+}
+
+.test-font {
+  font-size: $textSize;
 }
