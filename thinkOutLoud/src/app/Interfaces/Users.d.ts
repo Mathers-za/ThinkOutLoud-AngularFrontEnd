@@ -3,7 +3,7 @@ export interface ILoginForm {
   lastName: string;
   email: string;
   password: string;
-  passwordConfirm: string;
+  passwordConfirm?: string;
 }
 
 export interface IUser {

@@ -5,49 +5,34 @@
     </section>
     <section class="body">
       <form
-        #loginForm="ngForm"
+        [formGroup]="formData"
         class="content_pos"
         (ngSubmit)="isRegistered ? login() : register()"
       >
         <label *ngIf="!isRegistered">
           First name<input
-            #firstName="ngModel"
             required
-            [ngClass]="
-              firstName.invalid && firstName.touched ? 'inputError' : ''
-            "
             name="firstName"
-            [(ngModel)]="formData.firstName"
+            formControlName="firstName"
             type="text"
             class="textInput"
           />
-          <p
-            class="errorMessage"
-            *ngIf="firstName.invalid && firstName.touched"
-          >
-            First name is required
-          </p>
         </label>
 
         <label *ngIf="!isRegistered"
           >Last name
           <input
-            #lastName="ngModel"
             class="textInput"
             required
-            [ngClass]="lastName.invalid && lastName.touched ? 'inputError' : ''"
             name="lastName"
-            [(ngModel)]="formData.lastName"
+            formControlName="lastName"
             type="text"
           />
-          <p class="errorMessage" *ngIf="lastName.invalid && lastName.touched">
-            First name is required
-          </p>
+          <p class="errorMessage">First name is required</p>
         </label>
         <label
           >Email
           <input
-            #email="ngModel"
             [ngClass]="email.invalid && email.touched ? 'inputError' : ''"
             class="textInput"
             name="email"
@@ -55,10 +40,8 @@
             type="text"
             required
             email
+            formControlName="email"
           />
-          <p class="errorMessage" *ngIf="email.invalid && email.touched">
-            {{ email.errors?.["email"] ? "Invalid email" : "Email required" }}
-          </p>
         </label>
         <label
           >Password
@@ -68,46 +51,20 @@
                 ? '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_])[A-Za-z\\d\\W_]{8,}$'
                 : ''
             "
-            #password="ngModel"
-            [ngClass]="password.invalid && password.touched ? 'inputError' : ''"
-            required
             name="password"
-            [(ngModel)]="formData.password"
             type="password"
+            formControlName="password"
           />
-          <p class="errorMessage" *ngIf="password.invalid && password.touched">
-            {{
-              !isRegistered && password.invalid && password.errors?.["pattern"]
-                ? "Password is too weak"
-                : "Password is required"
-            }}
-          </p>
         </label>
         <label *ngIf="!isRegistered"
           >Confirm Password
           <input
-            [ngClass]="
-              passwordConfirm.invalid && passwordConfirm.touched
-                ? 'inputError'
-                : ''
-            "
-            #passwordConfirm="ngModel"
             required
             name="passwordConfirm"
-            [(ngModel)]="formData.passwordConfirm"
+            formControlName="passwordConfirm"
             type="password"
             [appConfirmPassword]="password"
           />
-          <p
-            class="errorMessage"
-            *ngIf="passwordConfirm.invalid && passwordConfirm.touched"
-          >
-            {{
-              passwordConfirm.hasError("passwordMismatch")
-                ? "Passwords do not match"
-                : "Password confirmation is required"
-            }}
-          </p>
         </label>
         <button
           class="btn btn-primary"
@@ -120,7 +77,7 @@
 
       <p
         class="link"
-        (click)="resetLoginFormValidation(loginForm); toggleIsRegistered()"
+        (click)="resetLoginFormValidation(); toggleIsRegistered()"
       >
         {{
           isRegistered

@@ -1,6 +1,12 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  NgForm,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ILoginForm } from '../Interfaces/Users';
 import { UsersService } from '../services/users.service';
 import { ConfirmPasswordDirective } from '../shared/custom directives/confirm-password.directive';
@@ -9,6 +15,13 @@ import { catchError, EMPTY, EmptyError, tap, throwError } from 'rxjs';
 import { HttpEvent, HttpResponse } from '@angular/common/http';
 import { FeedbackMessageComponent } from '../feedback-message/feedback-message.component';
 
+interface formTypes {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  passwordConfirm?: string;
+}
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -18,33 +31,38 @@ import { FeedbackMessageComponent } from '../feedback-message/feedback-message.c
     NgClass,
     ConfirmPasswordDirective,
     FeedbackMessageComponent,
+    ReactiveFormsModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  formData: ILoginForm = {
+  formData = this.fb.nonNullable.group<formTypes>({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    passwordConfirm: '',
-  };
+  });
+
   successfulRegistrationTimeout: ReturnType<typeof setTimeout> | null = null;
   serverErrorMessage: string = '';
   successRegistrationMessage = '';
   isRegistered = true;
 
-  constructor(private usersService: UsersService, private router: Router) {}
+  constructor(
+    private usersService: UsersService,
+    private router: Router,
+    private fb: FormBuilder
+  ) {}
 
   toggleIsRegistered() {
-    this.isRegistered = !this.isRegistered;
-    this.serverErrorMessage = '';
+    this.formData.addControl(
+      'passwordConfirm',
+      this.fb.nonNullable.control('')
+    );
   }
-
-  resetLoginFormValidation(loginFormTemplateVariable: NgForm) {
-    loginFormTemplateVariable.resetForm();
-    this.resetFormData();
+  resetLoginFormValidation() {
+    this.formData.reset();
 
     this.successRegistrationMessage = '';
   }
@@ -63,7 +81,7 @@ export class LoginComponent {
 
   login() {
     this.usersService
-      .loginUser(this.formData)
+      .loginUser(this.formData.getRawValue())
       .pipe(
         tap((response) => {
           if (response.success) {
@@ -80,7 +98,7 @@ export class LoginComponent {
   }
   register() {
     this.usersService
-      .registerUser(this.formData)
+      .registerUser(this.formData.getRawValue())
       .pipe(
         tap((response) => {
           if (response.success) {
@@ -93,16 +111,5 @@ export class LoginComponent {
         })
       )
       .subscribe();
-  }
-
-  resetFormData() {
-    console.log('email is ' + this.formData.email);
-    this.formData = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      passwordConfirm: '',
-    };
   }
 }
