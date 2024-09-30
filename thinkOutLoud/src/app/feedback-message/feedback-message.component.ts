@@ -12,4 +12,5 @@ export class FeedbackMessageComponent {
   @Input() message: string = '';
   @Input() severity: 'success' | 'error' | 'warning' = 'success';
   @Input() fullWidth: boolean = false;
+  @Input() visibility = false;
 }

@@ -4,3 +4,9 @@
     <router-outlet />
   </div>
 </div>
+
+<app-feedback-message
+  [message]="(userFeedBackMessage$ | async) ?? ''"
+  [severity]="(feedbackMessageSeverity$ | async) ?? 'success'"
+  [visibility]="(feedbackMessageVisibility$ | async) ?? false"
+></app-feedback-message>
