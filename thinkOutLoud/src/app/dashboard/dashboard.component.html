@@ -6,7 +6,5 @@
 </div>
 
 <app-feedback-message
-  [message]="(userFeedBackMessage$ | async) ?? ''"
-  [severity]="(feedbackMessageSeverity$ | async) ?? 'success'"
-  [visibility]="(feedbackMessageVisibility$ | async) ?? false"
+  [config]="(feedbackMessageConfig$ | async) ?? { visibility: false }"
 ></app-feedback-message>

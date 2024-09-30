@@ -1,9 +1,9 @@
 <div
-  *ngIf="visibility"
+  *ngIf="config.visibility"
   [ngClass]="{
-    error: severity === 'error',
-    success: severity === 'success',
-    warning: severity === 'warning'
+    error: config.severity === 'error',
+    success: config.severity === 'success',
+    warning: config.severity === 'warning'
   }"
   class="container"
   [ngStyle]="{
@@ -12,5 +12,5 @@
     
   }"
 >
-  {{ message }}
+  {{ config.message }}
 </div>

@@ -4,9 +4,19 @@ import { HomeNavBarComponent } from '../home-nav-bar/home-nav-bar.component';
 import { IUser } from '../Interfaces/Users';
 import { HttpClient } from '@angular/common/http';
 import { UsersService } from '../services/users.service';
-import { catchError, Observable, Subscription, tap, throwError } from 'rxjs';
+import {
+  catchError,
+  EMPTY,
+  Observable,
+  Subscription,
+  tap,
+  throwError,
+} from 'rxjs';
 import { FeedbackMessageComponent } from '../feedback-message/feedback-message.component';
-import { FeedbackMessageStateService } from '../feedback-message-state.service';
+import {
+  FeedbackMessageStateService,
+  IFeedbackConfig,
+} from '../feedback-message-state.service';
 import { AsyncPipe, NgIf } from '@angular/common';
 
 @Component({
@@ -26,9 +36,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   user: IUser | null = null;
   serverError: string = '';
   subScriber$?: Subscription;
-  userFeedBackMessage$!: Observable<string>;
-  feedbackMessageSeverity$!: Observable<'success' | 'error' | 'warning'>;
-  feedbackMessageVisibility$!: Observable<boolean>;
+  feedbackMessageConfig$!: Observable<IFeedbackConfig>;
 
   constructor(
     private usersService: UsersService,
@@ -36,9 +44,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.userFeedBackMessage$ = this.feedBackMessageService.message$;
-    this.feedbackMessageSeverity$ = this.feedBackMessageService.severity$;
-    this.feedbackMessageVisibility$ = this.feedBackMessageService.visibility$;
+    this.feedbackMessageConfig$ =
+      this.feedBackMessageService.feedbackMessageConfig$;
     this.subScriber$ = this.usersService
       .getUser()
       .pipe(
@@ -48,7 +55,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.user = data;
           }
         }),
-        catchError((err) => (this.serverError = err.message))
+        catchError((err) => {
+          this.feedBackMessageService.showFeedBackComponentOnTimer({
+            visibility: true,
+            message: err.message,
+            severity: 'error',
+          });
+          return EMPTY;
+        })
       )
       .subscribe();
   }
